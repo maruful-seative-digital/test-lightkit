@@ -41,7 +41,7 @@ const ControlPanel = ({ valuesFormik, generalSettingFormik }: PropsType) => {
         {/* Title */}
         <div className="flex items-center gap-1 font-semibold text-large">
           <h3>General settings</h3>
-          <Tooltip title="Test Title" />
+          <Tooltip title="Use this section for customizing the form info." />
         </div>
 
         {/* Form */}
@@ -77,7 +77,10 @@ const ControlPanel = ({ valuesFormik, generalSettingFormik }: PropsType) => {
 
           <div className="flex flex-col w-full gap-1">
             <label className="flex items-center justify-between text-small">
-              <span>Form title</span>
+              <div className="flex items-center gap-1">
+                <span>Form subtitle</span>
+                <Tooltip title="Optional block to add more context about the form." />
+              </div>
               <Toggle
                 name="hasSubTitle"
                 checked={generalSettingValues.hasSubTitle}
@@ -99,7 +102,7 @@ const ControlPanel = ({ valuesFormik, generalSettingFormik }: PropsType) => {
               extraClassNames={`${
                 !generalSettingValues.hasSubTitle ? "hidden" : ""
               }`}
-              placeholder="Enter title here"
+              placeholder="Enter subtitle here"
               disabled={!generalSettingValues.hasSubTitle}
             />
           </div>
@@ -116,28 +119,6 @@ const ControlPanel = ({ valuesFormik, generalSettingFormik }: PropsType) => {
               onChange={handleGeneralSettingChanges}
             />
           </div>
-
-          {/* <button className="flex items-center gap-1 px-3 py-2 rounded w-fit shadow-action-colored bg-action-primary text-large">
-            <span>Add to preview</span>
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M8 9.5C8.82843 9.5 9.5 8.82843 9.5 8C9.5 7.17157 8.82843 6.5 8 6.5C7.17157 6.5 6.5 7.17157 6.5 8C6.5 8.82843 7.17157 9.5 8 9.5Z"
-                fill="white"
-              />
-              <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
-                d="M8.00004 4C5.37598 4 3.11613 5.55492 2.08964 7.79148C2.02887 7.92388 2.02888 8.07621 2.08965 8.20861C3.11615 10.4451 5.37597 12 8.00001 12C10.6241 12 12.8839 10.4451 13.9104 8.20852C13.9712 8.07612 13.9712 7.92379 13.9104 7.79139C12.8839 5.55488 10.6241 4 8.00004 4ZM8.00001 11C5.86346 11 4.01048 9.78173 3.09961 8.00004C4.01047 6.21831 5.86347 5 8.00004 5C10.1366 5 11.9896 6.21827 12.9004 7.99996C11.9896 9.78169 10.1366 11 8.00001 11Z"
-                fill="white"
-              />
-            </svg>
-          </button> */}
         </form>
       </div>
 
@@ -146,7 +127,7 @@ const ControlPanel = ({ valuesFormik, generalSettingFormik }: PropsType) => {
         {/* Title */}
         <div className="flex items-center gap-1 font-semibold text-large">
           <h3>Input settings</h3>
-          <Tooltip title="Test Input settings tooltip" />
+          <Tooltip title="Use this section for customizing the input field." />
         </div>
 
         {/* Form */}
@@ -157,7 +138,7 @@ const ControlPanel = ({ valuesFormik, generalSettingFormik }: PropsType) => {
               className="flex items-center gap-1 text-small"
             >
               <span>Input type</span>
-              <Tooltip title="Test Input type tooltip" />
+              <Tooltip title="Select your preferred input type from the list given." />
             </label>
             <SelectField
               options={typesAvailable}
@@ -183,8 +164,25 @@ const ControlPanel = ({ valuesFormik, generalSettingFormik }: PropsType) => {
           <div className="flex flex-col w-full gap-1">
             <label className="flex items-center justify-between text-small">
               <div className="flex items-center gap-1">
+                <span>Is Required</span>
+                <Tooltip title="Make the input field mandatory or not." />
+              </div>
+
+              <Toggle
+                name="isRequired"
+                checked={values.isRequired}
+                onChange={(event) =>
+                  setFieldValue("isRequired", event.target.checked)
+                }
+              />
+            </label>
+          </div>
+
+          <div className="flex flex-col w-full gap-1">
+            <label className="flex items-center justify-between text-small">
+              <div className="flex items-center gap-1">
                 <span>Label text</span>
-                <Tooltip title="Test Label text tooltip" />
+                <Tooltip title="Label text will be added as the title of the input field." />
               </div>
 
               <Toggle
@@ -202,24 +200,8 @@ const ControlPanel = ({ valuesFormik, generalSettingFormik }: PropsType) => {
               value={values.label}
               onChange={handleChange}
               disabled={!values.hasLabel}
+              placeholder="Enter label here"
             />
-          </div>
-
-          <div className="flex flex-col w-full gap-1">
-            <label className="flex items-center justify-between text-small">
-              <div className="flex items-center gap-1">
-                <span>Is Required</span>
-                <Tooltip title="Test required tooltip" />
-              </div>
-
-              <Toggle
-                name="isRequired"
-                checked={values.isRequired}
-                onChange={(event) =>
-                  setFieldValue("isRequired", event.target.checked)
-                }
-              />
-            </label>
           </div>
 
           {values.type === "checkbox" || values.type === "radio" ? null : (
@@ -227,7 +209,7 @@ const ControlPanel = ({ valuesFormik, generalSettingFormik }: PropsType) => {
               <label className="flex items-center justify-between text-small">
                 <div className="flex items-center gap-1">
                   <span>Placeholder text</span>
-                  <Tooltip title="Test Placeholder Text tooltip" />
+                  <Tooltip title="Placeholder text will be added as the default field text." />
                 </div>
 
                 <Toggle
@@ -247,6 +229,7 @@ const ControlPanel = ({ valuesFormik, generalSettingFormik }: PropsType) => {
                 value={values.placeholder}
                 onChange={handleChange}
                 extraClassNames={`${!values.hasPlaceholder ? "hidden" : ""}`}
+                placeholder="Enter placeholder here"
               />
             </div>
           )}
@@ -256,7 +239,7 @@ const ControlPanel = ({ valuesFormik, generalSettingFormik }: PropsType) => {
               <label className="flex items-center justify-between text-small">
                 <div className="flex items-center gap-1">
                   <span>Hint text</span>
-                  <Tooltip title="Test Hint text tooltip" />
+                  <Tooltip title="Hint text will be added to give more context about the input field." />
                 </div>
 
                 <Toggle
@@ -277,6 +260,7 @@ const ControlPanel = ({ valuesFormik, generalSettingFormik }: PropsType) => {
                 extraClassNames={`${!values.hasHint ? "hidden" : ""}`}
                 onChange={handleChange}
                 disabled={!values.hasHint}
+                placeholder="Enter hint here"
               />
             </div>
           )}
@@ -284,13 +268,14 @@ const ControlPanel = ({ valuesFormik, generalSettingFormik }: PropsType) => {
           <div className="flex flex-col w-full gap-1">
             <label className="flex items-center gap-1 text-small">
               <span>CMS field title</span>
-              <Tooltip title="Test CMS field title tooltip" />
+              <Tooltip title="A column will be created on Webflow CMS by this title." />
             </label>
             <InputField
               type="text"
               id="name"
               value={values.name}
               onChange={handleChange}
+              placeholder="Enter CMS field title here"
             />
           </div>
 

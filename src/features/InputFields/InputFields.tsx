@@ -47,12 +47,12 @@ const InputFields = (): React.ReactElement => {
   const valuesFormik = useFormik({
     initialValues: {
       type: "text",
-      name: "Text field",
-      label: "Label",
+      name: "",
+      label: "",
       hasLabel: true,
-      hint: "Text Hint",
+      hint: "",
       hasHint: true,
-      placeholder: "Type here...",
+      placeholder: "",
       hasPlaceholder: true,
       isRequired: false,
     },
@@ -123,7 +123,7 @@ const InputFields = (): React.ReactElement => {
 
   const generalSettingFormik = useFormik({
     initialValues: {
-      title: "Contact From",
+      title: "",
       hasTitle: true,
       subTitle: "",
       hasSubTitle: false,

@@ -8,7 +8,7 @@ const Tooltip = ({ title }: PropTypes) => {
   const [onToolTip, setOnTooltip] = useState(false);
   return (
     <span
-      className="cursor-pointer relative"
+      className="relative cursor-pointer"
       onMouseEnter={() => {
         setOnTooltip(true);
       }}
@@ -40,7 +40,7 @@ const Tooltip = ({ title }: PropTypes) => {
         />
       </svg>
       {onToolTip ? (
-        <span className="absolute top-4 -left-16 w-36 object-fill bg-background-1 text-white text-sm z-20 px-2 py-3 font-normal rounded-md">
+        <span className="absolute z-20 object-fill w-40 p-1 font-normal text-white rounded-md -top-12 text-small -left-16 bg-background-5">
           {title}
         </span>
       ) : null}
