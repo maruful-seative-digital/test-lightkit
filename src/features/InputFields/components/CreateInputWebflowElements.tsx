@@ -1,6 +1,7 @@
 import { FormikProps } from "formik";
 
 import { FormValuesType, GeneralSettingFromType } from "../InputFields";
+import Button from "../../../components/shared/Button";
 
 type PropsType = {
   fromValues: FormValuesType[];
@@ -151,9 +152,10 @@ const CreateInputWebflowElements = ({
         <div></div>
       )}
 
-      <button
+      <Button
         onClick={() => createWebflowElement()}
-        className={`flex items-center gap-1 px-3 py-2 rounded w-fit shadow-action-colored bg-action-primary text-large text-action-primary ${
+        variant="actionPrimaryHover"
+        extraClassNames={`shadow-action-colored ${
           selectedWebflowEl !== "FormForm" ? "cursor-not-allowed" : ""
         }`}
         disabled={selectedWebflowEl !== "FormForm"}
@@ -177,7 +179,7 @@ const CreateInputWebflowElements = ({
             fill="white"
           />
         </svg>
-      </button>
+      </Button>
     </div>
   );
 };
