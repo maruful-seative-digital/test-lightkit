@@ -8,13 +8,17 @@ type PropsType = {
   fromValues: FormValuesType[];
   generalSettingFormik: FormikProps<GeneralSettingFromType>;
   handleInputDelete: (id: string) => void;
+  editFieldId: string | null;
   setEditFieldId: React.Dispatch<React.SetStateAction<string | null>>;
+  generalValues: GeneralSettingFromType | null;
 };
 
 const PreviewPanel = ({
+  generalValues,
   fromValues,
-  generalSettingFormik,
+  // generalSettingFormik,
   handleInputDelete,
+  editFieldId,
   setEditFieldId,
 }: PropsType): React.ReactElement => {
   const [activeTab, setActiveTab] = useState<string | null>(
@@ -24,7 +28,7 @@ const PreviewPanel = ({
   const blueFill = "#8ac2ff";
   const grayFill = "#6D6D6D";
 
-  const { values: generalSettingValues } = generalSettingFormik;
+  // const { values: generalSettingValues } = generalSettingFormik;
 
   return (
     <div className="w-[66%]">
@@ -111,15 +115,15 @@ const PreviewPanel = ({
         {activeTab === "custom-input-field" && (
           <div>
             <div className="flex flex-col w-full gap-1 mb-4">
-              {generalSettingValues.hasTitle ? (
+              {generalValues && generalValues.hasTitle ? (
                 <h4 className="font-semibold text-large">
-                  {generalSettingValues.title}
+                  {generalValues.title}
                 </h4>
               ) : null}
 
-              {generalSettingValues.hasSubTitle ? (
+              {generalValues && generalValues.hasSubTitle ? (
                 <h4 className="text-small text-text-2">
-                  {generalSettingValues.subTitle}
+                  {generalValues.subTitle}
                 </h4>
               ) : null}
             </div>
@@ -138,60 +142,70 @@ const PreviewPanel = ({
                         placeholder={
                           value.input.placeholder ? value.input.placeholder : ""
                         }
+                        extraClassNames={`${
+                          value.input.type === "checkbox" ||
+                          value.input.type === "radio"
+                            ? "shadow-none"
+                            : ""
+                        }`}
                       />
 
-                      <div className="flex items-center gap-4 text-small">
-                        <button
-                          onClick={() => {
-                            setEditFieldId(value.id);
-                          }}
-                          className="flex items-center gap-1 text-blue-text"
-                        >
-                          <svg
-                            width="16"
-                            height="16"
-                            viewBox="0 0 16 16"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
+                      {value.id !== editFieldId ? (
+                        <div className="flex items-center gap-4 text-small">
+                          <button
+                            onClick={() => {
+                              setEditFieldId(value.id);
+                            }}
+                            className="flex items-center gap-1 text-blue-text"
                           >
-                            <path
-                              opacity="0.4"
-                              fill-rule="evenodd"
-                              clip-rule="evenodd"
-                              d="M11.1465 6.85359L9.14648 4.85359L9.85359 4.14648L11.8536 6.14648L11.1465 6.85359Z"
-                              fill="#8AC2FF"
-                            />
-                            <path
-                              fill-rule="evenodd"
-                              clip-rule="evenodd"
-                              d="M10.4393 2.35352C11.0251 1.76774 11.9749 1.76774 12.5607 2.35352L13.6464 3.43931C14.2322 4.0251 14.2322 4.97484 13.6464 5.56063L6.20711 13H3V9.79286L10.4393 2.35352ZM11.8536 3.06063C11.6583 2.86537 11.3417 2.86537 11.1464 3.06063L4 10.2071V12H5.79289L12.9393 4.85352C13.1346 4.65826 13.1346 4.34168 12.9393 4.14642L11.8536 3.06063Z"
-                              fill="#8AC2FF"
-                            />
-                          </svg>
-                          <span>Edit</span>
-                        </button>
-                        <button
-                          onClick={() => handleInputDelete(value.id)}
-                          className="flex items-center gap-1 text-red-text"
-                        >
-                          <svg
-                            width="16"
-                            height="16"
-                            viewBox="0 0 16 16"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
+                            <svg
+                              width="16"
+                              height="16"
+                              viewBox="0 0 16 16"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                opacity="0.4"
+                                fill-rule="evenodd"
+                                clip-rule="evenodd"
+                                d="M11.1465 6.85359L9.14648 4.85359L9.85359 4.14648L11.8536 6.14648L11.1465 6.85359Z"
+                                fill="#8AC2FF"
+                              />
+                              <path
+                                fill-rule="evenodd"
+                                clip-rule="evenodd"
+                                d="M10.4393 2.35352C11.0251 1.76774 11.9749 1.76774 12.5607 2.35352L13.6464 3.43931C14.2322 4.0251 14.2322 4.97484 13.6464 5.56063L6.20711 13H3V9.79286L10.4393 2.35352ZM11.8536 3.06063C11.6583 2.86537 11.3417 2.86537 11.1464 3.06063L4 10.2071V12H5.79289L12.9393 4.85352C13.1346 4.65826 13.1346 4.34168 12.9393 4.14642L11.8536 3.06063Z"
+                                fill="#8AC2FF"
+                              />
+                            </svg>
+                            <span>Edit</span>
+                          </button>
+                          <button
+                            onClick={() => handleInputDelete(value.id)}
+                            className="flex items-center gap-1 text-red-text"
                           >
-                            <path
-                              fill-rule="evenodd"
-                              clip-rule="evenodd"
-                              d="M7 2C6.44772 2 6 2.44772 6 3V4H3V5H4V11.5C4 12.3284 4.67157 13 5.5 13H11.5C12.3284 13 13 12.3284 13 11.5V5H14V4H11V3C11 2.44772 10.5523 2 10 2H7ZM10 4V3H7V4H10ZM5 11.5V5H12V11.5C12 11.7761 11.7761 12 11.5 12H5.5C5.22386 12 5 11.7761 5 11.5Z"
-                              fill="#FF8A8A"
-                            />
-                          </svg>
+                            <svg
+                              width="16"
+                              height="16"
+                              viewBox="0 0 16 16"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                fill-rule="evenodd"
+                                clip-rule="evenodd"
+                                d="M7 2C6.44772 2 6 2.44772 6 3V4H3V5H4V11.5C4 12.3284 4.67157 13 5.5 13H11.5C12.3284 13 13 12.3284 13 11.5V5H14V4H11V3C11 2.44772 10.5523 2 10 2H7ZM10 4V3H7V4H10ZM5 11.5V5H12V11.5C12 11.7761 11.7761 12 11.5 12H5.5C5.22386 12 5 11.7761 5 11.5Z"
+                                fill="#FF8A8A"
+                              />
+                            </svg>
 
-                          <span>Delete</span>
-                        </button>
-                      </div>
+                            <span>Delete</span>
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="w-1/3"></div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -203,12 +217,76 @@ const PreviewPanel = ({
               </div>
             ))}
 
-            <button
-              type="button"
-              className="flex items-center gap-1 px-3 py-2 mt-4 rounded w-fit bg-background-inverse text-text-inverse text-small"
-            >
-              {generalSettingValues.buttonText}
-            </button>
+            {generalValues ? (
+              <button
+                type="button"
+                className="flex items-center gap-1 px-3 py-2 mt-4 rounded w-fit bg-background-inverse text-text-inverse text-small"
+              >
+                {generalValues.buttonText}
+              </button>
+            ) : (
+              <div className="flex gap-1 flex-col items-center justify-center p-8 rounded bg-background-2 text-small max-w-[280px] mx-auto">
+                <svg
+                  width="16"
+                  height="32"
+                  viewBox="0 0 16 32"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g clip-path="url(#clip0_262_277)">
+                    <path
+                      d="M10.2619 10.7024L9.92746 11.0741L10.2619 10.7024ZM12.9011 13.0777L12.5666 13.4493L12.9011 13.0777ZM14.436 14.7694L13.9792 14.9728L13.9792 14.9728L14.436 14.7694ZM2.11436 21.8856L2.46792 21.5321H2.46791L2.11436 21.8856ZM13.8856 21.8856L13.532 21.5321L13.532 21.5321L13.8856 21.8856ZM9.33331 22.1667H6.66665V23.1667H9.33331V22.1667ZM1.83331 17.3333V14.6667H0.833313V17.3333H1.83331ZM14.1666 17.0419V17.3333H15.1666V17.0419H14.1666ZM9.92746 11.0741L12.5666 13.4493L13.2356 12.706L10.5964 10.3308L9.92746 11.0741ZM15.1666 17.0419C15.1666 15.9164 15.1767 15.2037 14.8927 14.566L13.9792 14.9728C14.1566 15.371 14.1666 15.828 14.1666 17.0419H15.1666ZM12.5666 13.4493C13.4689 14.2614 13.8019 14.5747 13.9792 14.9728L14.8927 14.566C14.6087 13.9283 14.0722 13.459 13.2356 12.706L12.5666 13.4493ZM6.68651 9.83333C7.74104 9.83333 8.13898 9.84105 8.49366 9.97715L8.85193 9.04353C8.28403 8.82561 7.66531 8.83333 6.68651 8.83333V9.83333ZM10.5964 10.3308C9.87243 9.67918 9.41975 9.26142 8.85193 9.04353L8.49366 9.97715C8.84841 10.1133 9.14764 10.3722 9.92746 11.0741L10.5964 10.3308ZM6.66665 22.1667C5.39543 22.1667 4.49232 22.1656 3.80721 22.0735C3.13649 21.9833 2.75005 21.8142 2.46792 21.5321L1.76081 22.2392C2.25972 22.7381 2.89235 22.9595 3.67396 23.0646C4.4412 23.1677 5.4237 23.1667 6.66665 23.1667V22.1667ZM0.833313 17.3333C0.833313 18.5763 0.832251 19.5588 0.935403 20.326C1.04049 21.1076 1.2619 21.7403 1.76081 22.2392L2.46791 21.5321C2.18578 21.2499 2.01666 20.8635 1.92649 20.1928C1.83437 19.5077 1.83331 18.6045 1.83331 17.3333H0.833313ZM9.33331 23.1667C10.5763 23.1667 11.5588 23.1677 12.326 23.0646C13.1076 22.9595 13.7402 22.7381 14.2392 22.2392L13.532 21.5321C13.2499 21.8142 12.8635 21.9833 12.1927 22.0735C11.5076 22.1656 10.6045 22.1667 9.33331 22.1667V23.1667ZM14.1666 17.3333C14.1666 18.6045 14.1656 19.5077 14.0735 20.1928C13.9833 20.8635 13.8142 21.2499 13.532 21.5321L14.2392 22.2392C14.7381 21.7403 14.9595 21.1076 15.0646 20.326C15.1677 19.5588 15.1666 18.5763 15.1666 17.3333H14.1666ZM1.83331 14.6667C1.83331 13.3954 1.83437 12.4923 1.92649 11.8072C2.01666 11.1365 2.18578 10.7501 2.46792 10.4679L1.76081 9.76082C1.2619 10.2597 1.04049 10.8924 0.935403 11.674C0.832251 12.4412 0.833313 13.4237 0.833313 14.6667H1.83331ZM6.68651 8.83333C5.4369 8.83333 4.44959 8.83228 3.67923 8.93538C2.89486 9.04036 2.26011 9.26152 1.76081 9.76082L2.46792 10.4679C2.74967 10.1862 3.13729 10.0168 3.81188 9.92654C4.50048 9.83438 5.40872 9.83333 6.68651 9.83333V8.83333Z"
+                      fill="#F5F5F5"
+                    />
+                    <path
+                      opacity="0.5"
+                      d="M8.66669 9.66667V11.3333C8.66669 12.9047 8.66669 13.6904 9.15484 14.1785C9.643 14.6667 10.4287 14.6667 12 14.6667H14.6667"
+                      stroke="#F5F5F5"
+                    />
+                    <ellipse
+                      opacity="0.5"
+                      cx="11.3334"
+                      cy="17.6667"
+                      rx="0.666667"
+                      ry="1"
+                      fill="#F5F5F5"
+                    />
+                    <path
+                      opacity="0.5"
+                      d="M6 19.6667C7.2111 20.4741 8.7889 20.4741 10 19.6667"
+                      stroke="#F5F5F5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <ellipse
+                      opacity="0.5"
+                      cx="4.66667"
+                      cy="17.6667"
+                      rx="0.666667"
+                      ry="1"
+                      fill="#F5F5F5"
+                    />
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_262_277">
+                      <rect
+                        width="16"
+                        height="16"
+                        fill="white"
+                        transform="translate(0 8)"
+                      />
+                    </clipPath>
+                  </defs>
+                </svg>
+
+                <div className="text-center">
+                  <h3>Nothing is cooked yet!</h3>
+                  <p className="text-text-2">
+                    Start building from pre-made templates or build your own.
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         )}
 

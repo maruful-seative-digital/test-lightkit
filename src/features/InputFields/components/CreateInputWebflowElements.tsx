@@ -7,14 +7,16 @@ type PropsType = {
   fromValues: FormValuesType[];
   generalSettingFormik: FormikProps<GeneralSettingFromType>;
   selectedWebflowEl: string | null | undefined;
+  generalValues: GeneralSettingFromType | null;
 };
 
 const CreateInputWebflowElements = ({
   fromValues,
-  generalSettingFormik,
+  // generalSettingFormik,
   selectedWebflowEl,
+  generalValues,
 }: PropsType): React.ReactElement => {
-  const { values: generalFormValues } = generalSettingFormik;
+  // const { values: generalFormValues } = generalSettingFormik;
 
   async function createWebflowElement() {
     const selectedElement = await webflow.getSelectedElement();
@@ -26,22 +28,22 @@ const CreateInputWebflowElements = ({
       );
 
       // Form Title
-      if (generalFormValues.hasTitle) {
+      if (generalValues?.hasTitle) {
         const formHeadingWFEl = await fromWFEl?.append(
           webflow.elementPresets.DOM
         );
 
         formHeadingWFEl.setTag("h3");
-        formHeadingWFEl.setTextContent(generalFormValues.title);
+        formHeadingWFEl.setTextContent(generalValues?.title);
       }
 
       // Form Subtitle
-      if (generalFormValues.hasSubTitle) {
+      if (generalValues?.hasSubTitle) {
         const formHeadingWFEl = await fromWFEl?.append(
           webflow.elementPresets.Paragraph
         );
 
-        formHeadingWFEl.setTextContent(generalFormValues.subTitle);
+        formHeadingWFEl.setTextContent(generalValues?.subTitle);
       }
 
       fromValues.forEach(async (item) => {
@@ -93,7 +95,7 @@ const CreateInputWebflowElements = ({
 
       submitButtonWFEl.setCustomAttribute(
         "value",
-        generalFormValues.buttonText
+        generalValues?.buttonText || "Submit"
       );
     }
   }
@@ -156,7 +158,9 @@ const CreateInputWebflowElements = ({
         onClick={() => createWebflowElement()}
         variant="actionPrimaryHover"
         extraClassNames={`shadow-action-colored ${
-          selectedWebflowEl !== "FormForm" ? "cursor-not-allowed" : ""
+          selectedWebflowEl !== "FormForm"
+            ? "cursor-not-allowed opacity-40"
+            : "opacity-100"
         }`}
         disabled={selectedWebflowEl !== "FormForm"}
       >

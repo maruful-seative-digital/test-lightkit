@@ -38,6 +38,10 @@ export interface GeneralSettingFromType {
 }
 
 const InputFields = (): React.ReactElement => {
+  const [isGeneralSettingsEditing, setIsGeneralSettingsEditing] =
+    useState<boolean>(false);
+  const [generalValues, setGeneralValues] =
+    useState<GeneralSettingFromType | null>(null);
   const [fromValues, setFromValues] = useState<FormValuesType[]>([]);
   const [editFieldId, setEditFieldId] = useState<string | null>(null);
   const [selectedWebflowEl, setSelectedWebflowEl] = useState<
@@ -56,7 +60,7 @@ const InputFields = (): React.ReactElement => {
       hasPlaceholder: true,
       isRequired: false,
     },
-    onSubmit: (values) => {
+    onSubmit: (values, action) => {
       setFromValues((prevValues: FormValuesType[]): FormValuesType[] => {
         if (editFieldId === null) {
           const newValues = {
@@ -79,6 +83,7 @@ const InputFields = (): React.ReactElement => {
           valuesFormik.setFieldValue("hasHint", true);
           valuesFormik.setFieldValue("placeholder", "Type here...");
           valuesFormik.setFieldValue("hasPlaceholder", true);
+          action.resetForm();
 
           return [...prevValues, newValues];
         }
@@ -112,9 +117,12 @@ const InputFields = (): React.ReactElement => {
           valuesFormik.setFieldValue("hasHint", true);
           valuesFormik.setFieldValue("placeholder", "Type here...");
           valuesFormik.setFieldValue("hasPlaceholder", true);
+          action.resetForm();
 
           return prevValues;
         }
+
+        action.resetForm();
 
         return prevValues;
       });
@@ -130,7 +138,8 @@ const InputFields = (): React.ReactElement => {
       buttonText: "Submit",
     },
     onSubmit: (values) => {
-      console.log(values);
+      setGeneralValues(values);
+      setIsGeneralSettingsEditing(false);
     },
   });
 
@@ -153,6 +162,7 @@ const InputFields = (): React.ReactElement => {
       );
       valuesFormik.setFieldValue("label", editFieldObj?.labelText?.text);
       valuesFormik.setFieldValue("hint", editFieldObj?.input?.hint);
+      valuesFormik.setFieldValue("isRequired", editFieldObj?.input?.isRequired);
     }
   }, [editFieldId]);
 
@@ -183,18 +193,25 @@ const InputFields = (): React.ReactElement => {
         <ControlPanel
           valuesFormik={valuesFormik}
           generalSettingFormik={generalSettingFormik}
+          generalValues={generalValues}
+          isGeneralSettingsEditing={isGeneralSettingsEditing}
+          setIsGeneralSettingsEditing={setIsGeneralSettingsEditing}
+          editFieldId={editFieldId}
         />
         <PreviewPanel
           fromValues={fromValues}
           generalSettingFormik={generalSettingFormik}
           handleInputDelete={handleInputDelete}
+          editFieldId={editFieldId}
           setEditFieldId={setEditFieldId}
+          generalValues={generalValues}
         />
       </section>
       <CreateInputWebflowElements
         fromValues={fromValues}
         generalSettingFormik={generalSettingFormik}
         selectedWebflowEl={selectedWebflowEl}
+        generalValues={generalValues}
       />
     </>
   );
