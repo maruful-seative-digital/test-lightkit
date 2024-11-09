@@ -10,8 +10,8 @@ const AppHeader = ({ children }: PropTypes) => {
       {children}
       <div className="flex items-center justify-end gap-3">
         <div className="flex items-center gap-2">
-          <Button variant="defaultSecondary">Documentation</Button>
-          <Button variant="defaultSecondary">Get Support</Button>
+          <Button variant="actionSecondary">Documentation</Button>
+          <Button variant="actionSecondary">Get Support</Button>
         </div>
         <button className="p-1 rounded bg-background-3 text-text-1">
           <svg

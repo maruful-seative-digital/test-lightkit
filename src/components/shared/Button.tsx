@@ -1,28 +1,25 @@
 type BaseButtonAttributes = React.ComponentPropsWithoutRef<"button">;
 type ButtonVariantTypes = {
-  base: string;
-  outline: string;
-  defaultPrimary: string;
-  defaultSecondary: string;
+  actionPrimaryHover: string;
+  actionSecondary: string;
 };
 
 interface ButtonProps extends BaseButtonAttributes {
   extraClassNames?: string;
-  variant: "base" | "outline" | "defaultPrimary" | "defaultSecondary";
+  variant: "actionSecondary" | "actionPrimaryHover";
   children: React.ReactNode;
 }
 
 const variants: ButtonVariantTypes = {
-  base: "bg- text-gray-800  hover:bg-gray-100",
-  outline: "bg-gray-700 text-gray-50  hover:bg-gray-600",
-  defaultPrimary: "bg-background-inverse text-text-inverse",
-  defaultSecondary:
+  actionPrimaryHover:
+    "bg-action-primary-hover flex items-center gap-1 px-3 py-2 rounded w-fit text-large text-action-primary",
+  actionSecondary:
     "bg-background-3 shadow-action-secondary text-text-1 py-1 px-2 text-small",
 };
 
 const Button = ({
   children,
-  variant = "defaultPrimary",
+  variant = "actionSecondary",
   extraClassNames = "",
   ...rest
 }: ButtonProps) => {
