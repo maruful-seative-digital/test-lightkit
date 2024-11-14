@@ -3,6 +3,8 @@ import { FormikProps } from "formik";
 import { FormValuesType, GeneralSettingFromType } from "../InputFields";
 import InputField from "../../../components/shared/Input.";
 import { useState } from "react";
+import formImage1 from "../../../assets/input-field/form-version-one-img.png";
+import formImage2 from "../../../assets/input-field/form-version-two-img.png";
 
 type PropsType = {
   fromValues: FormValuesType[];
@@ -28,7 +30,45 @@ const PreviewPanel = ({
   const blueFill = "#8ac2ff";
   const grayFill = "#6D6D6D";
 
-  // const { values: generalSettingValues } = generalSettingFormik;
+  const formTemplates = [
+    {
+      id: 0,
+      name: "Form Template 1",
+      image: formImage1,
+      link: "https://lightkit.webflow.io/components/forms/form-1",
+    },
+    {
+      id: 1,
+      name: "Form Template 2",
+      image: formImage2,
+      link: "https://lightkit.webflow.io/components/forms/form-2",
+    },
+  ];
+
+  const handleCopy = async (id: number) => {
+    const res = await fetch("/inputTemplates.json");
+    const data = await res.json();
+
+    const copyJson = (event: ClipboardEvent) => {
+      event.preventDefault();
+
+      if (event.clipboardData) {
+        // Set the copied data in the clipboard as a string
+        event.clipboardData.setData(
+          "application/json",
+          JSON.stringify(data[id])
+        );
+
+        webflow.notify({ type: "Success", message: "Form template copied!" });
+      } else {
+        console.error("Clipboard data is not available.");
+      }
+    };
+
+    document.addEventListener("copy", copyJson);
+    document.execCommand("copy");
+    document.removeEventListener("copy", copyJson);
+  };
 
   return (
     <div className="w-[66%]">
@@ -291,7 +331,84 @@ const PreviewPanel = ({
         )}
 
         {/* pre-made templates tab */}
-        {activeTab === "pre-made-templates" && <div>hello</div>}
+        {activeTab === "pre-made-templates" && (
+          <div className="grid grid-cols-2 gap-2">
+            {formTemplates.map((template) => (
+              <div
+                key={template.id}
+                className="h-full bg-gradient-to-b from-white/[.12] to-white/10 rounded-md py-1 px-[6px] shadow-action-colored text-small flex flex-col gap-2"
+              >
+                <img
+                  src={template.image}
+                  alt="Preview of form template one"
+                  className="w-full h-full rounded-md"
+                />
+
+                {/* template card text and buttons wrapper */}
+                <div className="flex items-center justify-between w-full h-full">
+                  <h4>{template.name}</h4>
+
+                  {/* form buttons wrapper */}
+                  <div className="flex items-center gap-1">
+                    {/* preview button wrapper */}
+                    <button
+                      onClick={() => window.open(template.link, "_blank")}
+                      className="bg-gradient-to-b from-white/[.12] to-white/10 shadow-action-secondary rounded p-[2px]"
+                    >
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 9 9"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M4.7039 5.10983C5.10926 5.10983 5.43788 4.78122 5.43788 4.37585C5.43788 3.97049 5.10926 3.64188 4.7039 3.64188C4.29853 3.64188 3.96992 3.97049 3.96992 4.37585C3.96992 4.78122 4.29853 5.10983 4.7039 5.10983Z"
+                          fill="#F5F5F5"
+                        />
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M4.70392 2.41858C3.41992 2.41858 2.31413 3.17943 1.81185 4.27382C1.78212 4.33861 1.78212 4.41314 1.81185 4.47793C2.31414 5.5723 3.41991 6.33313 4.7039 6.33313C5.98791 6.33313 7.09369 5.57228 7.59597 4.47789C7.6257 4.4131 7.6257 4.33856 7.59597 4.27378C7.09368 3.17941 5.98791 2.41858 4.70392 2.41858ZM4.7039 5.84381C3.65845 5.84381 2.75176 5.24769 2.30605 4.37587C2.75175 3.50404 3.65845 2.9079 4.70392 2.9079C5.74937 2.9079 6.65607 3.50402 7.10177 4.37584C6.65607 5.24767 5.74937 5.84381 4.7039 5.84381Z"
+                          fill="#F5F5F5"
+                        />
+                      </svg>
+                    </button>
+                    <button
+                      onClick={() => handleCopy(template.id)}
+                      className="bg-action-primary shadow-action-secondary rounded p-[2px]"
+                    >
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 9 9"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M3.40497 1.92926C3.40497 1.65902 3.62404 1.43994 3.89429 1.43994L6.8302 1.43994C7.10044 1.43994 7.31951 1.65902 7.31951 1.92926L7.31951 4.86517C7.31951 5.13541 7.10044 5.35449 6.8302 5.35449L3.89429 5.35449C3.62404 5.35449 3.40497 5.13541 3.40497 4.86517L3.40497 1.92926ZM3.89429 1.92926L6.8302 1.92926L6.8302 4.86517L3.89429 4.86517L3.89429 1.92926Z"
+                          fill="#F5F5F5"
+                        />
+                        <path
+                          d="M1.93701 2.9079L1.93701 6.33313C1.93701 6.60337 2.15609 6.82244 2.42633 6.82244L5.85156 6.82244V6.33313L2.42633 6.33313L2.42633 2.9079H1.93701Z"
+                          fill="#F5F5F5"
+                        />
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M3.40497 1.92926C3.40497 1.65902 3.62404 1.43994 3.89429 1.43994L6.8302 1.43994C7.10044 1.43994 7.31951 1.65902 7.31951 1.92926L7.31951 4.86517C7.31951 5.13541 7.10044 5.35449 6.8302 5.35449L3.89429 5.35449C3.62404 5.35449 3.40497 5.13541 3.40497 4.86517L3.40497 1.92926ZM3.89429 1.92926L6.8302 1.92926L6.8302 4.86517L3.89429 4.86517L3.89429 1.92926Z"
+                        />
+                        <path d="M1.93701 2.9079L1.93701 6.33313C1.93701 6.60337 2.15609 6.82244 2.42633 6.82244L5.85156 6.82244V6.33313L2.42633 6.33313L2.42633 2.9079H1.93701Z" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

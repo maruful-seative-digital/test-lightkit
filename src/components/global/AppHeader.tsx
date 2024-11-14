@@ -10,10 +10,18 @@ const AppHeader = ({ children }: PropTypes) => {
       {children}
       <div className="flex items-center justify-end gap-3">
         <div className="flex items-center gap-2">
-          <Button variant="actionSecondary">Documentation</Button>
-          <Button variant="actionSecondary">Get Support</Button>
+          <a target="_blank" href="https://lightkit.webflow.io/docs">
+            <Button variant="actionSecondary">Documentation</Button>
+          </a>
+          <a target="_blank" href="https://discord.gg/H9UQbTHnAT">
+            <Button variant="actionSecondary">Get Support</Button>
+          </a>
         </div>
-        <button className="p-1 rounded bg-background-3 text-text-1">
+        <a
+          target="_blank"
+          href="https://lightkit-user-dashboard.vercel.app/"
+          className="p-1 rounded bg-background-3 text-text-1"
+        >
           <svg
             width="16"
             height="16"
@@ -32,7 +40,7 @@ const AppHeader = ({ children }: PropTypes) => {
               fill="#F5F5F5"
             />
           </svg>
-        </button>
+        </a>
       </div>
     </header>
   );
