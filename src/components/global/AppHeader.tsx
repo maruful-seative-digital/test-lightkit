@@ -5,6 +5,20 @@ type PropTypes = {
 };
 
 const AppHeader = ({ children }: PropTypes) => {
+  const handleAuthentication = () => {
+    const data = { accessToken: "", refreshToken: "" };
+
+    const queryParams = new URLSearchParams(data);
+
+    console.log(data);
+
+    // Open the new window
+    window.open(
+      `http://localhost:3000/login?${queryParams.toString()}`,
+      "_blank"
+    );
+  };
+
   return (
     <header className="flex items-center justify-between w-full px-4 py-3 border-b bg-background-input border-border-1">
       {children}
@@ -17,9 +31,8 @@ const AppHeader = ({ children }: PropTypes) => {
             <Button variant="actionSecondary">Get Support</Button>
           </a>
         </div>
-        <a
-          target="_blank"
-          href="https://lightkit-user-dashboard.vercel.app/"
+        <button
+          onClick={handleAuthentication}
           className="p-1 rounded bg-background-3 text-text-1"
         >
           <svg
@@ -40,7 +53,7 @@ const AppHeader = ({ children }: PropTypes) => {
               fill="#F5F5F5"
             />
           </svg>
-        </a>
+        </button>
       </div>
     </header>
   );
