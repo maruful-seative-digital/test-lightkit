@@ -1,22 +1,39 @@
+import { useContext } from "react";
 import Button from "../shared/Button";
+import { AuthContext } from "../../providers/AuthProvider";
 
 type PropTypes = {
   children: React.ReactNode;
 };
 
 const AppHeader = ({ children }: PropTypes) => {
+  const context = useContext(AuthContext);
+
+  // Ensure the context is not undefined (meaning it must be within an AuthProvider)
+  if (!context) {
+    return <div>Loading...</div>; // or handle the undefined case appropriately
+  }
+
+  const { accessInfo } = context;
+
   const handleAuthentication = () => {
-    const data = { accessToken: "", refreshToken: "" };
+    if (!accessInfo) {
+      return;
+    }
 
-    const queryParams = new URLSearchParams(data);
+    const redirectUrl = window.location.href;
 
-    console.log(data);
+    const state = btoa(redirectUrl);
+
+    const queryParams = new URLSearchParams({
+      accessToken: accessInfo.accessToken || "",
+      refreshToken: accessInfo.refreshToken || "",
+      userVerified: accessInfo.userVerified?.toString() || "null",
+      state,
+    });
 
     // Open the new window
-    window.open(
-      `http://localhost:3000/login?${queryParams.toString()}`,
-      "_blank"
-    );
+    window.open(`http://localhost:3000?${queryParams.toString()}`, "_blank");
   };
 
   return (

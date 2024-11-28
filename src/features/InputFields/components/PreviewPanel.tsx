@@ -35,13 +35,13 @@ const PreviewPanel = ({
       id: 0,
       name: "Form Template 1",
       image: formImage1,
-      link: "https://lightkit.webflow.io/components/forms/form-1",
+      link: "https://lightkit.webflow.io/components/forms/form-1#form-template-v1",
     },
     {
       id: 1,
       name: "Form Template 2",
       image: formImage2,
-      link: "https://lightkit.webflow.io/components/forms/form-2",
+      link: "https://lightkit.webflow.io/components/forms/form-2#form-template-v2",
     },
   ];
 
@@ -150,7 +150,7 @@ const PreviewPanel = ({
         </div>
       </div>
 
-      <div className="py-6 pl-8 pr-4">
+      <div className="px-4 py-6">
         {/* custom input field tab */}
         {activeTab === "custom-input-field" && (
           <div>

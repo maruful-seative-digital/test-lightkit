@@ -3,9 +3,12 @@ import { useState } from "react";
 import ActiveFeature from "./components/global/ActiveFeature";
 import AppHeader from "./components/global/AppHeader";
 import FeatureList from "./components/global/FeatureList";
+// import { AuthContext } from "./providers/AuthProvider";
 
 function App() {
   const [selectedFeature, setSelectedFeature] = useState<string | null>(null);
+
+  // const authData = useContext(AuthContext);
 
   return (
     <main className="font-inter">
