@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import Button from "../shared/Button";
 import { AuthContext } from "../../providers/AuthProvider";
 
@@ -7,13 +7,15 @@ type PropTypes = {
 };
 
 const AppHeader = ({ children }: PropTypes) => {
+  const [showMenu, setShowMenu] = useState(false);
+
   const authContext = useContext(AuthContext);
 
   if (!authContext) {
     throw new Error("AuthContext must be used within an AuthProvider");
   }
 
-  const { loginWithGoogle, logout, user } = authContext;
+  const { loginWithGoogle, user, logout } = authContext;
 
   const handleGoogleLogin = () => {
     loginWithGoogle()
@@ -40,9 +42,29 @@ const AppHeader = ({ children }: PropTypes) => {
           </a>
         </div>
         {user ? (
-          <button onClick={handleLogout} className="text-white">
-            logout
-          </button>
+          <div className="relative">
+            <button onClick={() => setShowMenu(!showMenu)}>
+              <img
+                src={user?.photoURL as string}
+                alt="User image"
+                className="w-6 h-6 rounded-full"
+              />
+            </button>
+
+            {/* menu list */}
+            {showMenu && (
+              <div className="absolute right-0 z-10 text-white rounded h-fit w-fit top-8 text-small bg-background-3">
+                <ul>
+                  <li
+                    onClick={handleLogout}
+                    className="px-4 py-2 cursor-pointer"
+                  >
+                    Logout
+                  </li>
+                </ul>
+              </div>
+            )}
+          </div>
         ) : (
           <button
             onClick={handleGoogleLogin}
