@@ -1,27 +1,24 @@
-import { createContext, ReactNode } from "react";
+import { createContext, ReactNode, useState } from "react";
 
-interface AuthContextType {
-  currentUrl: string | null;
-  accessInfo: {
-    accessToken: string | null;
-    refreshToken: string | null;
-    userVerified: boolean | null;
-  } | null;
-}
+type User = Record<string, unknown>;
 
-export const AuthContext = createContext<AuthContextType | undefined>(
-  undefined
-);
+export type AuthContextTypes = {
+  name: string;
+  user: User | null;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+};
+
+export const AuthContext = createContext<AuthContextTypes | null>(null);
 
 interface AuthProviderProps {
-  children: ReactNode; // Type 'children' as ReactNode
+  children: ReactNode;
 }
 
 export default function AuthProvider({ children }: AuthProviderProps) {
-  const currentUrl = window.location.href;
-  const accessInfo = { accessToken: "", refreshToken: "", userVerified: false };
+  const [user, setUser] = useState<User | null>(null);
+  const name = "adnan";
 
-  const authData = { currentUrl, accessInfo };
+  const authData: AuthContextTypes = { user, setUser, name };
 
   return (
     <AuthContext.Provider value={authData}>{children}</AuthContext.Provider>
