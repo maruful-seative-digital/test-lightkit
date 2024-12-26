@@ -42,12 +42,13 @@ const AppHeader = ({ children }: PropTypes) => {
           </a>
         </div>
         {user ? (
-          <div className="relative">
+          <div className="relative flex items-center">
             <button onClick={() => setShowMenu(!showMenu)}>
               <img
                 src={user?.photoURL as string}
                 alt="User image"
                 className="w-6 h-6 rounded-full"
+                loading="lazy"
               />
             </button>
 

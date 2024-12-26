@@ -2,6 +2,8 @@ import { FormikProps } from "formik";
 
 import { FormValuesType, GeneralSettingFromType } from "../InputFields";
 import Button from "../../../components/shared/Button";
+import { useContext } from "react";
+import { AuthContext } from "../../../providers/AuthProvider";
 
 type PropsType = {
   fromValues: FormValuesType[];
@@ -16,7 +18,13 @@ const CreateInputWebflowElements = ({
   selectedWebflowEl,
   generalValues,
 }: PropsType): React.ReactElement => {
-  // const { values: generalFormValues } = generalSettingFormik;
+  const authContext = useContext(AuthContext);
+
+  if (!authContext) {
+    throw new Error("Auth information not available");
+  }
+
+  const { loginWithGoogle, user } = authContext;
 
   async function createWebflowElement() {
     const selectedElement = await webflow.getSelectedElement();
@@ -100,6 +108,14 @@ const CreateInputWebflowElements = ({
     }
   }
 
+  const handleGoogleLogin = () => {
+    loginWithGoogle()
+      .then(() => {
+        createWebflowElement();
+      })
+      .catch((error) => console.log(error));
+  };
+
   return (
     <div className="fixed bottom-0 right-0 w-[66%] px-4 py-3 border-t border-border-1 flex items-center justify-between">
       {selectedWebflowEl !== "FormForm" ? (
@@ -155,7 +171,7 @@ const CreateInputWebflowElements = ({
       )}
 
       <Button
-        onClick={() => createWebflowElement()}
+        onClick={() => (user ? createWebflowElement() : handleGoogleLogin())}
         variant="actionPrimaryHover"
         extraClassNames={`shadow-action-colored ${
           selectedWebflowEl !== "FormForm"
