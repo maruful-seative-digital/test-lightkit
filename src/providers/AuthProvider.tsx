@@ -1,27 +1,62 @@
-import { createContext, ReactNode } from "react";
+import { createContext, ReactNode, useEffect, useState } from "react";
+import {
+  GoogleAuthProvider,
+  onAuthStateChanged,
+  signInWithPopup,
+  UserCredential,
+  User,
+  signOut,
+} from "firebase/auth";
+import { auth } from "../firebaseConfig";
 
-interface AuthContextType {
-  currentUrl: string | null;
-  accessInfo: {
-    accessToken: string | null;
-    refreshToken: string | null;
-    userVerified: boolean | null;
-  } | null;
-}
+const googleProvider = new GoogleAuthProvider();
 
-export const AuthContext = createContext<AuthContextType | undefined>(
-  undefined
-);
+export type AuthContextTypes = {
+  user: User | null;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  loginWithGoogle: () => Promise<UserCredential>;
+  logout: () => Promise<void>;
+};
+
+export const AuthContext = createContext<AuthContextTypes | null>(null);
 
 interface AuthProviderProps {
-  children: ReactNode; // Type 'children' as ReactNode
+  children: ReactNode;
 }
 
 export default function AuthProvider({ children }: AuthProviderProps) {
-  const currentUrl = window.location.href;
-  const accessInfo = { accessToken: "", refreshToken: "", userVerified: false };
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const authData = { currentUrl, accessInfo };
+  const loginWithGoogle = (): Promise<UserCredential> => {
+    setLoading(true);
+    return signInWithPopup(auth, googleProvider);
+  };
+
+  const logout = (): Promise<void> => {
+    setLoading(true);
+    return signOut(auth);
+  };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+
+      setLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const authData: AuthContextTypes = {
+    user,
+    setUser,
+    loading,
+    setLoading,
+    loginWithGoogle,
+    logout,
+  };
 
   return (
     <AuthContext.Provider value={authData}>{children}</AuthContext.Provider>
