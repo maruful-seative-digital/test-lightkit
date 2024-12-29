@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import Button from "../shared/Button";
 import { AuthContext } from "../../providers/AuthProvider";
+import { Link } from "react-router-dom";
 
 type PropTypes = {
   children: React.ReactNode;
@@ -19,13 +20,13 @@ const AppHeader = ({ children }: PropTypes) => {
 
   const handleGoogleLogin = () => {
     loginWithGoogle()
-      .then()
+      .then(() => setShowMenu(false))
       .catch((error) => console.log(error));
   };
 
   const handleLogout = () => {
     logout()
-      .then()
+      .then(() => setShowMenu(false))
       .catch((error) => console.log(error));
   };
 
@@ -54,11 +55,22 @@ const AppHeader = ({ children }: PropTypes) => {
 
             {/* menu list */}
             {showMenu && (
-              <div className="absolute right-0 z-10 text-white rounded h-fit w-fit top-8 text-small bg-background-3">
+              <div className="absolute z-10 overflow-hidden text-white border rounded -right-1 h-fit w-fit top-8 text-small bg-background-2 border-border-1">
                 <ul>
+                  <li>
+                    <Link
+                      to="/profile"
+                      className="block px-4 py-2 cursor-pointer hover:bg-background-3"
+                    >
+                      Profile
+                    </Link>
+                  </li>
+                  <li className="px-4 py-2 cursor-pointer hover:bg-background-3">
+                    Subscription
+                  </li>
                   <li
                     onClick={handleLogout}
-                    className="px-4 py-2 cursor-pointer"
+                    className="px-4 py-2 cursor-pointer hover:bg-background-3"
                   >
                     Logout
                   </li>
