@@ -59,6 +59,7 @@ const AppHeader = ({ children }: PropTypes) => {
                 <ul>
                   <li>
                     <Link
+                      onClick={() => setShowMenu(false)}
                       to="/profile"
                       className="block px-4 py-2 cursor-pointer hover:bg-background-3"
                     >
