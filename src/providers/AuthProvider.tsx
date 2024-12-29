@@ -1,4 +1,10 @@
-import { createContext, ReactNode, useEffect, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import {
   GoogleAuthProvider,
   onAuthStateChanged,
@@ -62,3 +68,11 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     <AuthContext.Provider value={authData}>{children}</AuthContext.Provider>
   );
 }
+
+export const useAuth = (): AuthContextTypes => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within a AuthProvider");
+  }
+  return context;
+};

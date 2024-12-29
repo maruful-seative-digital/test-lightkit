@@ -1,6 +1,6 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import Button from "../shared/Button";
-import { AuthContext } from "../../providers/AuthProvider";
+import { useAuth } from "../../providers/AuthProvider";
 import { Link } from "react-router-dom";
 
 type PropTypes = {
@@ -10,19 +10,7 @@ type PropTypes = {
 const AppHeader = ({ children }: PropTypes) => {
   const [showMenu, setShowMenu] = useState(false);
 
-  const authContext = useContext(AuthContext);
-
-  if (!authContext) {
-    throw new Error("AuthContext must be used within an AuthProvider");
-  }
-
-  const { loginWithGoogle, user, logout } = authContext;
-
-  const handleGoogleLogin = () => {
-    loginWithGoogle()
-      .then(() => setShowMenu(false))
-      .catch((error) => console.log(error));
-  };
+  const { user, logout } = useAuth();
 
   const handleLogout = () => {
     logout()
@@ -80,8 +68,8 @@ const AppHeader = ({ children }: PropTypes) => {
             )}
           </div>
         ) : (
-          <button
-            onClick={handleGoogleLogin}
+          <Link
+            to="/signup"
             className="p-1 rounded bg-background-3 text-text-1"
           >
             <svg
@@ -102,7 +90,7 @@ const AppHeader = ({ children }: PropTypes) => {
                 fill="#F5F5F5"
               />
             </svg>
-          </button>
+          </Link>
         )}
       </div>
     </header>
