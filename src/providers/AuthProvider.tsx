@@ -12,6 +12,8 @@ import {
   UserCredential,
   User,
   signOut,
+  createUserWithEmailAndPassword,
+  updateProfile,
 } from "firebase/auth";
 import { auth } from "../firebaseConfig";
 
@@ -24,6 +26,8 @@ export type AuthContextTypes = {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   loginWithGoogle: () => Promise<UserCredential>;
   logout: () => Promise<void>;
+  createUser: (email: string, password: string) => Promise<UserCredential>;
+  updateUserProfile: (name: string) => Promise<void>;
 };
 
 export const AuthContext = createContext<AuthContextTypes | null>(null);
@@ -46,6 +50,24 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     return signOut(auth);
   };
 
+  const createUser = (
+    email: string,
+    password: string
+  ): Promise<UserCredential> => {
+    setLoading(true);
+    return createUserWithEmailAndPassword(auth, email, password);
+  };
+
+  const updateUserProfile = (name: string): Promise<void> => {
+    if (!auth.currentUser) {
+      return Promise.reject(new Error("No user is currently signed in."));
+    }
+
+    return updateProfile(auth?.currentUser, {
+      displayName: name,
+    });
+  };
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
@@ -62,6 +84,8 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     setLoading,
     loginWithGoogle,
     logout,
+    createUser,
+    updateUserProfile,
   };
 
   return (

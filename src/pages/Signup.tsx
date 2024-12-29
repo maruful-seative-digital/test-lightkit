@@ -1,19 +1,144 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../providers/AuthProvider";
+import { sendEmailVerification } from "firebase/auth";
+import { addDoc, collection, getDocs } from "firebase/firestore";
+import { db } from "../firebaseConfig";
+
+interface User {
+  id: string;
+  name: string;
+  email: string;
+}
+
+async function getDataFromFirestore(): Promise<User[]> {
+  const querySnapshot = await getDocs(collection(db, "users"));
+
+  const data: User[] = [];
+  querySnapshot.forEach((doc) => {
+    const userData = doc.data() as Omit<User, "id">;
+    data.push({ id: doc.id, ...userData });
+  });
+  return data;
+}
+
+async function addDataToFirestore(
+  name: string,
+  email: string
+): Promise<boolean> {
+  try {
+    const docRef = await addDoc(collection(db, "users"), {
+      name: name,
+      email: email,
+    });
+
+    console.log(docRef.id);
+    return true;
+  } catch (err) {
+    console.error(err);
+    return false;
+  }
+}
 
 export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [terms, setTerms] = useState(false);
+  const [userData, setUserData] = useState<User[]>([]);
 
-  const { loginWithGoogle } = useAuth();
+  // const navigate = useNavigate();
 
-  const handleRegister = () => {};
+  console.log(userData);
 
-  const handleGoogleLogin = () => {
+  const { loginWithGoogle, createUser } = useAuth();
+
+  useEffect(() => {
+    async function fetchData() {
+      const data = await getDataFromFirestore();
+      setUserData(data);
+    }
+    fetchData();
+  }, []);
+
+  const handleRegister = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const form = event.target as HTMLFormElement;
+    const name = (form.elements.namedItem("name") as HTMLInputElement).value;
+    const email = (form.elements.namedItem("email") as HTMLInputElement).value;
+    const password = (form.elements.namedItem("password") as HTMLInputElement)
+      .value;
+
+    createUser(email, password)
+      .then((result) => {
+        sendEmailVerification(result.user).then(() => {
+          webflow.notify({
+            type: "Info",
+            message: "Email verification mail sent to your email address",
+          });
+        });
+
+        // if (result.user) {
+        //   navigate("/register/email-verification");
+        // }
+
+        form.reset();
+      })
+      .catch((error) => console.log(error.message));
+
+    const userAlreadyRegistered = userData.find((user) => user.email === email);
+
+    console.log(userAlreadyRegistered);
+
+    if (!userAlreadyRegistered) {
+      const added = await addDataToFirestore(name, email);
+
+      if (added) {
+        webflow.notify({
+          type: "Success",
+          message: "User registered successfully!",
+        });
+      }
+    }
+  };
+
+  const handleGoogleLogin = async () => {
     loginWithGoogle()
-      .then()
-      .catch((error) => console.log(error));
+      .then(async (result) => {
+        const user = result.user;
+
+        sendEmailVerification(user).then(() => {
+          webflow.notify({
+            type: "Info",
+            message: "Email verification mail sent to your email address",
+          });
+        });
+
+        const email = user.email;
+        const displayName = user.displayName;
+
+        if (!email || !displayName) {
+          console.error("Missing user information.");
+          return;
+        }
+
+        const userAlreadyRegistered = userData.find(
+          (user) => user.email === email
+        );
+
+        if (!userAlreadyRegistered) {
+          const added = await addDataToFirestore(displayName, email);
+
+          if (added) {
+            webflow.notify({
+              type: "Success",
+              message: "User registered successfully!",
+            });
+          }
+        }
+      })
+      .catch((error) => {
+        console.error("Error during Google login:", error);
+      });
   };
 
   return (
