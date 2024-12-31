@@ -2,8 +2,7 @@ import { FormikProps } from "formik";
 
 import { FormValuesType, GeneralSettingFromType } from "../InputFields";
 import Button from "../../../components/shared/Button";
-import { useContext } from "react";
-import { AuthContext } from "../../../providers/AuthProvider";
+import { useAuth } from "../../../providers/AuthProvider";
 
 type PropsType = {
   fromValues: FormValuesType[];
@@ -18,13 +17,7 @@ const CreateInputWebflowElements = ({
   selectedWebflowEl,
   generalValues,
 }: PropsType): React.ReactElement => {
-  const authContext = useContext(AuthContext);
-
-  if (!authContext) {
-    throw new Error("Auth information not available");
-  }
-
-  const { loginWithGoogle, user } = authContext;
+  const { loginWithGoogle, user } = useAuth();
 
   async function createWebflowElement() {
     const selectedElement = await webflow.getSelectedElement();

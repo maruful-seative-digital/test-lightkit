@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../providers/AuthProvider";
 import { sendEmailVerification } from "firebase/auth";
 import { addDoc, collection, getDocs } from "firebase/firestore";
-import { db } from "../firebaseConfig";
+import { db } from "../firebase/firebaseConfig";
 
 interface User {
   id: string;
@@ -45,9 +45,7 @@ export default function Signup() {
   const [terms, setTerms] = useState(false);
   const [userData, setUserData] = useState<User[]>([]);
 
-  // const navigate = useNavigate();
-
-  console.log(userData);
+  const navigate = useNavigate();
 
   const { loginWithGoogle, createUser } = useAuth();
 
@@ -71,15 +69,15 @@ export default function Signup() {
     createUser(email, password)
       .then((result) => {
         sendEmailVerification(result.user).then(() => {
+          if (result.user) {
+            navigate("/register/email-verification");
+          }
+
           webflow.notify({
             type: "Info",
             message: "Email verification mail sent to your email address",
           });
         });
-
-        // if (result.user) {
-        //   navigate("/register/email-verification");
-        // }
 
         form.reset();
       })
@@ -107,6 +105,10 @@ export default function Signup() {
         const user = result.user;
 
         sendEmailVerification(user).then(() => {
+          if (result.user) {
+            navigate("/register/email-verification");
+          }
+
           webflow.notify({
             type: "Info",
             message: "Email verification mail sent to your email address",
@@ -154,7 +156,7 @@ export default function Signup() {
               htmlFor="name"
               className="block mb-1 font-semibold text-large"
             >
-              Your Name
+              Full Name
             </label>
             <div className="relative">
               <input
@@ -191,7 +193,7 @@ export default function Signup() {
               htmlFor="email"
               className="block mb-1 font-semibold text-large"
             >
-              Your email
+              Email
             </label>
             <div className="relative">
               <input
@@ -224,7 +226,7 @@ export default function Signup() {
               htmlFor="password"
               className="block mb-1 font-semibold text-large"
             >
-              Your password
+              Password
             </label>
             <div className="relative">
               <input
@@ -376,9 +378,15 @@ export default function Signup() {
               </svg>
             </button>
 
+            <div className="flex items-center gap-1 my-4">
+              <div className="w-full h-[1px] bg-white"></div>
+              <p>or</p>
+              <div className="w-full h-[1px] bg-white"></div>
+            </div>
+
             <button
               onClick={handleGoogleLogin}
-              className="flex items-center justify-center w-full gap-2 py-2 mt-2 text-black bg-white rounded-xl"
+              className="flex items-center justify-center w-full gap-2 py-2 text-black bg-white rounded-xl"
             >
               <svg
                 width="16"

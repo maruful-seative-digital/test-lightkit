@@ -2,6 +2,8 @@ import { useState } from "react";
 import Button from "../shared/Button";
 import { useAuth } from "../../providers/AuthProvider";
 import { Link } from "react-router-dom";
+import placeholderUserImage from "../../assets/placeholders/placeholder-user.png";
+import useEmailVerification from "../../hooks/useEmailVerification";
 
 type PropTypes = {
   children: React.ReactNode;
@@ -11,6 +13,10 @@ const AppHeader = ({ children }: PropTypes) => {
   const [showMenu, setShowMenu] = useState(false);
 
   const { user, logout } = useAuth();
+
+  const emailVerified = useEmailVerification();
+
+  console.log("email verified: ", emailVerified);
 
   const handleLogout = () => {
     logout()
@@ -34,7 +40,7 @@ const AppHeader = ({ children }: PropTypes) => {
           <div className="relative flex items-center">
             <button onClick={() => setShowMenu(!showMenu)}>
               <img
-                src={user?.photoURL as string}
+                src={user?.photoURL ? user.photoURL : placeholderUserImage}
                 alt="User image"
                 className="w-6 h-6 rounded-full"
                 loading="lazy"
