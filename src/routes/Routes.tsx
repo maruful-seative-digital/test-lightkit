@@ -5,6 +5,7 @@ import MainLayout from "../layouts/MainLayout";
 import Login from "../pages/Login";
 import Signup from "../pages/Signup";
 import EmailVerification from "../pages/EmailVerification";
+import ForgotPassword from "../pages/ForgotPassword";
 
 export const routes: RouteObject[] = [
   {
@@ -14,8 +15,9 @@ export const routes: RouteObject[] = [
       { path: "/", element: <App /> },
       { path: "/profile", element: <Profile /> },
       { path: "/login", element: <Login /> },
+      { path: "/login/forgot-password", element: <ForgotPassword /> },
       { path: "/signup", element: <Signup /> },
-      { path: "/register/email-verification", element: <EmailVerification /> },
+      { path: "/signup/email-verification", element: <EmailVerification /> },
     ],
   },
   //   {

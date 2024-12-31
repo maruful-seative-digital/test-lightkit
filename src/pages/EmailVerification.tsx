@@ -1,8 +1,19 @@
 import { sendEmailVerification } from "firebase/auth";
 import { useAuth } from "../providers/AuthProvider";
+import useEmailVerification from "../hooks/useEmailVerification";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function EmailVerification() {
+  const emailVerified = useEmailVerification();
   const { user } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (emailVerified) {
+      navigate("/");
+    }
+  }, [emailVerified, navigate]);
 
   const handleEmailVerification = () => {
     if (user) {

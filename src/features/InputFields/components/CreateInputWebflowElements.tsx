@@ -3,6 +3,7 @@ import { FormikProps } from "formik";
 import { FormValuesType, GeneralSettingFromType } from "../InputFields";
 import Button from "../../../components/shared/Button";
 import { useAuth } from "../../../providers/AuthProvider";
+import useEmailVerification from "../../../hooks/useEmailVerification";
 
 type PropsType = {
   fromValues: FormValuesType[];
@@ -18,9 +19,17 @@ const CreateInputWebflowElements = ({
   generalValues,
 }: PropsType): React.ReactElement => {
   const { loginWithGoogle, user } = useAuth();
+  const emailVerified = useEmailVerification();
 
   async function createWebflowElement() {
     const selectedElement = await webflow.getSelectedElement();
+
+    if (!emailVerified) {
+      return webflow.notify({
+        type: "Info",
+        message: "Please verify your email to Insert",
+      });
+    }
 
     if (selectedElement?.children && selectedElement.type === "FormForm") {
       // Main Form div
@@ -104,7 +113,10 @@ const CreateInputWebflowElements = ({
   const handleGoogleLogin = () => {
     loginWithGoogle()
       .then(() => {
-        createWebflowElement();
+        webflow.notify({
+          type: "Success",
+          message: "User logged in successfully!",
+        });
       })
       .catch((error) => console.log(error));
   };

@@ -14,6 +14,7 @@ import {
   signOut,
   createUserWithEmailAndPassword,
   updateProfile,
+  signInWithEmailAndPassword,
 } from "firebase/auth";
 import { auth } from "../firebase/firebaseConfig";
 
@@ -25,6 +26,10 @@ export type AuthContextTypes = {
   loading: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   loginWithGoogle: () => Promise<UserCredential>;
+  loginWithPassword: (
+    email: string,
+    password: string
+  ) => Promise<UserCredential>;
   logout: () => Promise<void>;
   createUser: (email: string, password: string) => Promise<UserCredential>;
   updateUserProfile: (name: string) => Promise<void>;
@@ -43,6 +48,14 @@ export default function AuthProvider({ children }: AuthProviderProps) {
   const loginWithGoogle = (): Promise<UserCredential> => {
     setLoading(true);
     return signInWithPopup(auth, googleProvider);
+  };
+
+  const loginWithPassword = (
+    email: string,
+    password: string
+  ): Promise<UserCredential> => {
+    setLoading(true);
+    return signInWithEmailAndPassword(auth, email, password);
   };
 
   const logout = (): Promise<void> => {
@@ -83,6 +96,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     loading,
     setLoading,
     loginWithGoogle,
+    loginWithPassword,
     logout,
     createUser,
     updateUserProfile,

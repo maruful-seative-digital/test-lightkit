@@ -70,7 +70,7 @@ export default function Signup() {
       .then((result) => {
         sendEmailVerification(result.user).then(() => {
           if (result.user) {
-            navigate("/register/email-verification");
+            navigate("/signup/email-verification");
           }
 
           webflow.notify({
@@ -84,8 +84,6 @@ export default function Signup() {
       .catch((error) => console.log(error.message));
 
     const userAlreadyRegistered = userData.find((user) => user.email === email);
-
-    console.log(userAlreadyRegistered);
 
     if (!userAlreadyRegistered) {
       const added = await addDataToFirestore(name, email);
@@ -106,7 +104,7 @@ export default function Signup() {
 
         sendEmailVerification(user).then(() => {
           if (result.user) {
-            navigate("/register/email-verification");
+            navigate("/signup/email-verification");
           }
 
           webflow.notify({
@@ -334,7 +332,7 @@ export default function Signup() {
             </div>
           </div>
 
-          <div className="flex flex-row-reverse items-center justify-end gap-2 mb-8">
+          <div className="flex flex-row-reverse items-center justify-end gap-2 mb-4">
             <label
               htmlFor="terms"
               className="font-medium text-large text-text-2"
@@ -354,7 +352,7 @@ export default function Signup() {
           <div className="leading-[0px] text-large font-semibold">
             <button
               type="submit"
-              className="flex items-center justify-center w-full gap-2 py-2 text-white bg-background-input rounded-xl"
+              className="flex items-center justify-center w-full gap-2 py-2 text-white bg-action-primary-hover rounded-xl"
             >
               <span>Sign Up</span>
               <svg
@@ -378,10 +376,10 @@ export default function Signup() {
               </svg>
             </button>
 
-            <div className="flex items-center gap-1 my-4">
-              <div className="w-full h-[1px] bg-white"></div>
+            <div className="flex items-center gap-1 my-4 text-text-2">
+              <div className="w-full h-[1px] bg-background-5"></div>
               <p>or</p>
-              <div className="w-full h-[1px] bg-white"></div>
+              <div className="w-full h-[1px] bg-background-5"></div>
             </div>
 
             <button
