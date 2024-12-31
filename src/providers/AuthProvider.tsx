@@ -15,6 +15,7 @@ import {
   createUserWithEmailAndPassword,
   updateProfile,
   signInWithEmailAndPassword,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import { auth } from "../firebase/firebaseConfig";
 
@@ -33,6 +34,7 @@ export type AuthContextTypes = {
   logout: () => Promise<void>;
   createUser: (email: string, password: string) => Promise<UserCredential>;
   updateUserProfile: (name: string) => Promise<void>;
+  resetPassword: (email: string) => Promise<void>;
 };
 
 export const AuthContext = createContext<AuthContextTypes | null>(null);
@@ -81,6 +83,11 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     });
   };
 
+  const resetPassword = (email: string): Promise<void> => {
+    setLoading(true);
+    return sendPasswordResetEmail(auth, email);
+  };
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
@@ -100,6 +107,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     logout,
     createUser,
     updateUserProfile,
+    resetPassword,
   };
 
   return (
