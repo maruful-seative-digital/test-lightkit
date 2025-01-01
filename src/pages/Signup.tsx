@@ -107,10 +107,17 @@ export default function Signup() {
             navigate("/signup/email-verification");
           }
 
-          webflow.notify({
-            type: "Info",
-            message: "Email verification mail sent to your email address",
-          });
+          if (!user.emailVerified) {
+            webflow.notify({
+              type: "Info",
+              message: "Email verification mail sent to your email address",
+            });
+          } else {
+            webflow.notify({
+              type: "Success",
+              message: "User logged in successfully!",
+            });
+          }
         });
 
         const email = user.email;
