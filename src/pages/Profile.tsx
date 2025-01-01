@@ -6,7 +6,7 @@ export default function Profile() {
   const [isSecondTab, setIsSecondTab] = useState(false);
   const [showForm, setShowForm] = useState(false);
 
-  const { user, updateUserProfile } = useAuth();
+  const { user, updateUserProfile, resetPassword } = useAuth();
 
   const handleFirstTab = () => {
     setIsFirstTab(true);
@@ -35,6 +35,25 @@ export default function Profile() {
       .catch((error) => {
         console.log(error.message);
       });
+  };
+
+  const handleUpdatePassword = () => {
+    if (user?.email) {
+      resetPassword(user.email)
+        .then(() => {
+          webflow.notify({
+            type: "Success",
+            message: "Password reset email sent successfully!",
+          });
+
+          handleFirstTab();
+        })
+        .catch((error) => {
+          console.log(error.message);
+        });
+    } else {
+      console.error("User email is not available.");
+    }
   };
 
   return (
@@ -102,10 +121,12 @@ export default function Profile() {
       <div className="col-span-2 p-6 rounded-[20px] border">
         {/* first tab contents */}
         {isFirstTab && (
-          <div className="flex flex-col items-start gap-[30px]">
-            <div className="flex items-center gap-6">
-              <p className="text-small text-text-3">Name:</p>
-              <p className="text-large text-text-1">{user?.displayName}</p>
+          <div className="flex flex-col items-start gap-[30px] w-full">
+            <div className="flex items-center w-full">
+              <p className="w-1/6 text-small text-text-3">Name:</p>
+              <p className="w-5/6 text-large text-text-1">
+                {user?.displayName}
+              </p>
             </div>
 
             {showForm && (
@@ -185,7 +206,46 @@ export default function Profile() {
         )}
 
         {/* second tab contents */}
-        {isSecondTab && <div>second tab contents</div>}
+        {isSecondTab && (
+          <div>
+            <div className="flex items-center mb-5">
+              <p className="w-1/6 text-small text-text-3">Email:</p>
+              <p className="w-5/6 text-large text-text-1">{user?.email}</p>
+            </div>
+
+            <div className="flex items-center">
+              <p className="w-1/6 text-small text-text-3">Password:</p>
+              <div className="flex items-center w-5/6 gap-3">
+                <p className="text-large text-text-1">******</p>
+                <button
+                  onClick={handleUpdatePassword}
+                  className="flex items-center justify-center w-fit px-5 gap-2 py-2 text-white bg-action-primary-hover rounded-xl leading-[0px] text-large font-semibold"
+                >
+                  <span>Change</span>
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M4 11.25C3.58579 11.25 3.25 11.5858 3.25 12C3.25 12.4142 3.58579 12.75 4 12.75V11.25ZM4 12.75H20V11.25H4V12.75Z"
+                      fill="white"
+                    />
+                    <path
+                      d="M14 6L20 12L14 18"
+                      stroke="white"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
