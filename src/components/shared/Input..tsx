@@ -10,7 +10,7 @@ export default function InputField({
 }: InputProps) {
   return (
     <input
-      className={`p-1 w-full border border-border-2 rounded bg-background-input border-border-2/40 text-small text-text-1 shadow-input-inner-shadow placeholder:text-text-1 ${extraClassNames}`}
+      className={`p-1 w-full border border-border-2 rounded bg-background-input border-border-2/40 text-small text-text-1 shadow-input-inner-shadow placeholder:text-text-3 placeholder:font-normal ${extraClassNames}`}
       {...restProps}
     />
   );

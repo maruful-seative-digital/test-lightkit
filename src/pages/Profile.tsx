@@ -1,12 +1,104 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../providers/AuthProvider";
+import {
+  collection,
+  doc,
+  getDocs,
+  onSnapshot,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
+import { db } from "../firebase/firebaseConfig";
+
+interface User {
+  id: string;
+  name: string;
+  email: string;
+}
+
+async function getDataFromFirestore(): Promise<User[]> {
+  const querySnapshot = await getDocs(collection(db, "users"));
+
+  const data: User[] = [];
+  querySnapshot.forEach((doc) => {
+    const userData = doc.data() as Omit<User, "id">;
+    data.push({ id: doc.id, ...userData });
+  });
+  return data;
+}
+
+const updateNameInFirestore = async (
+  email: string,
+  newName: string
+): Promise<void> => {
+  try {
+    const usersCollectionRef = collection(db, "users");
+    const q = query(usersCollectionRef, where("email", "==", email));
+
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
+      console.error("No user found with the provided email.");
+      return;
+    }
+
+    querySnapshot.forEach(async (docSnapshot) => {
+      const userDocRef = docSnapshot.ref;
+      await updateDoc(userDocRef, { name: newName });
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 export default function Profile() {
   const [isFirstTab, setIsFirstTab] = useState(true);
   const [isSecondTab, setIsSecondTab] = useState(false);
   const [showForm, setShowForm] = useState(false);
+  const [userData, setUserData] = useState<User[]>([]);
+
+  const nameRef = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    async function fetchData() {
+      const data = await getDataFromFirestore();
+      setUserData(data);
+    }
+    fetchData();
+  }, []);
 
   const { user, updateUserProfile, resetPassword } = useAuth();
+
+  useEffect(() => {
+    // Real-time listener for Firestore data
+    const unsubscribe = onSnapshot(collection(db, "users"), (snapshot) => {
+      const data = snapshot.docs.map(
+        (doc) => ({ id: doc.id, ...doc.data() } as User)
+      );
+      setUserData(data); // Keep userData in sync with Firestore
+    });
+
+    // Cleanup listener on unmount
+    return () => unsubscribe();
+  }, []);
+
+  const currentUser = userData.find((u) => u.email === user?.email);
+
+  useEffect(() => {
+    if (!currentUser || !currentUser.email) return;
+
+    const userDocRef = doc(db, "users", currentUser.email);
+
+    const unsubscribe = onSnapshot(userDocRef, (docSnapshot) => {
+      if (docSnapshot.exists() && nameRef.current) {
+        nameRef.current.textContent = docSnapshot.data()?.name || "";
+      }
+    });
+
+    // Cleanup listener on component unmount
+    return () => unsubscribe();
+  }, [currentUser]);
 
   const handleFirstTab = () => {
     setIsFirstTab(true);
@@ -26,11 +118,14 @@ export default function Profile() {
 
     updateUserProfile(name)
       .then(() => {
-        webflow.notify({
-          type: "Success",
-          message: "User Name updated successfully!",
-        });
-        setShowForm(false);
+        if (user?.email) {
+          updateNameInFirestore(user.email, name);
+          webflow.notify({
+            type: "Success",
+            message: "User Name updated successfully!",
+          });
+          setShowForm(false);
+        }
       })
       .catch((error) => {
         console.log(error.message);
@@ -59,7 +154,7 @@ export default function Profile() {
   return (
     <div className="grid grid-cols-3 gap-6 p-4">
       {/* tab buttons wrapper */}
-      <div className="h-fit flex flex-col px-6 divide-y divide-gray-300 rounded-[20px] border text-large leading-[0px]">
+      <div className="h-fit flex flex-col px-6 divide-y divide-gray-300 rounded-[20px] bg-background-input text-large leading-[0px]">
         <button
           onClick={handleFirstTab}
           className={`flex items-center justify-start gap-3 py-4 ${
@@ -118,15 +213,49 @@ export default function Profile() {
       </div>
 
       {/* tabs contents wrapper */}
-      <div className="col-span-2 p-6 rounded-[20px] border">
+      <div className="col-span-2 p-6 rounded-[20px] bg-background-input h-fit">
         {/* first tab contents */}
         {isFirstTab && (
           <div className="flex flex-col items-start gap-[30px] w-full">
             <div className="flex items-center w-full">
               <p className="w-1/6 text-small text-text-3">Name:</p>
-              <p className="w-5/6 text-large text-text-1">
-                {user?.displayName}
+              <p className="w-5/6 text-large text-text-1" ref={nameRef}>
+                {currentUser?.name}
               </p>
+              <button
+                onClick={() => setShowForm(true)}
+                className={`flex items-center justify-center ${
+                  showForm ? "hidden" : "block"
+                }`}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  version="1.1"
+                  xmlnsXlink="http://www.w3.org/1999/xlink"
+                  width="16"
+                  height="16"
+                  x="0"
+                  y="0"
+                  viewBox="0 0 401.523 401"
+                  enable-background="new 0 0 512 512"
+                  xmlSpace="preserve"
+                >
+                  <g>
+                    <path
+                      d="M370.59 250.973c-5.524 0-10 4.476-10 10v88.789c-.02 16.562-13.438 29.984-30 30H50c-16.563-.016-29.98-13.438-30-30V89.172c.02-16.559 13.438-29.98 30-30h88.79c5.523 0 10-4.477 10-10 0-5.52-4.477-10-10-10H50c-27.602.031-49.969 22.398-50 50v260.594c.031 27.601 22.398 49.968 50 50h280.59c27.601-.032 49.969-22.399 50-50v-88.793c0-5.524-4.477-10-10-10zm0 0"
+                      fill="#fff"
+                      opacity="1"
+                      data-original="#fff"
+                    ></path>
+                    <path
+                      d="M376.629 13.441c-17.574-17.574-46.067-17.574-63.64 0L134.581 191.848a9.997 9.997 0 0 0-2.566 4.402l-23.461 84.7a9.997 9.997 0 0 0 12.304 12.308l84.7-23.465a9.997 9.997 0 0 0 4.402-2.566l178.402-178.41c17.547-17.587 17.547-46.055 0-63.641zM156.37 198.348 302.383 52.332l47.09 47.09-146.016 146.016zm-9.406 18.875 37.62 37.625-52.038 14.418zM374.223 74.676 363.617 85.28l-47.094-47.094 10.61-10.605c9.762-9.762 25.59-9.762 35.351 0l11.739 11.734c9.746 9.774 9.746 25.59 0 35.36zm0 0"
+                      fill="#fff"
+                      opacity="1"
+                      data-original="#fff"
+                    ></path>
+                  </g>
+                </svg>
+              </button>
             </div>
 
             {showForm && (
@@ -136,7 +265,7 @@ export default function Profile() {
                     htmlFor="name"
                     className="block mb-1 font-semibold text-large"
                   >
-                    New Name
+                    Change Name
                   </label>
                   <div className="relative">
                     <input
@@ -168,40 +297,22 @@ export default function Profile() {
                   </div>
                 </div>
 
-                <button
-                  type="submit"
-                  className="flex items-center justify-center w-full gap-2 py-2 text-white bg-action-primary-hover rounded-xl leading-[0px] text-large font-semibold"
-                >
-                  <span>Submit</span>
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
+                <div className="flex items-center gap-5">
+                  <button
+                    type="submit"
+                    className="w-full px-2 py-2 font-semibold text-center rounded text-large bg-action-primary-hover shadow-action-secondary text-text-1"
                   >
-                    <path
-                      d="M4 11.25C3.58579 11.25 3.25 11.5858 3.25 12C3.25 12.4142 3.58579 12.75 4 12.75V11.25ZM4 12.75H20V11.25H4V12.75Z"
-                      fill="white"
-                    />
-                    <path
-                      d="M14 6L20 12L14 18"
-                      stroke="white"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </button>
+                    Save
+                  </button>
+                  <button
+                    onClick={() => setShowForm(false)}
+                    className="w-full px-2 py-2 font-semibold text-center text-black bg-white rounded text-large shadow-action-secondary"
+                  >
+                    Cancel
+                  </button>
+                </div>
               </form>
             )}
-
-            <button
-              onClick={() => setShowForm(!showForm)}
-              className="flex items-center justify-center gap-2 px-5 py-2 font-semibold text-black bg-white w-fit rounded-xl text-large"
-            >
-              <span>{showForm ? "Cancel" : "Edit"}</span>
-            </button>
           </div>
         )}
 

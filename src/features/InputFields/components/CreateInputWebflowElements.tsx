@@ -4,6 +4,7 @@ import { FormValuesType, GeneralSettingFromType } from "../InputFields";
 import Button from "../../../components/shared/Button";
 import { useAuth } from "../../../providers/AuthProvider";
 import useEmailVerification from "../../../hooks/useEmailVerification";
+import { useNavigate } from "react-router-dom";
 
 type PropsType = {
   fromValues: FormValuesType[];
@@ -18,8 +19,9 @@ const CreateInputWebflowElements = ({
   selectedWebflowEl,
   generalValues,
 }: PropsType): React.ReactElement => {
-  const { loginWithGoogle, user } = useAuth();
+  const { user } = useAuth();
   const emailVerified = useEmailVerification();
+  const navigate = useNavigate();
 
   async function createWebflowElement() {
     const selectedElement = await webflow.getSelectedElement();
@@ -110,15 +112,9 @@ const CreateInputWebflowElements = ({
     }
   }
 
-  const handleGoogleLogin = () => {
-    loginWithGoogle()
-      .then(() => {
-        webflow.notify({
-          type: "Success",
-          message: "User logged in successfully!",
-        });
-      })
-      .catch((error) => console.log(error));
+  const handleNavigate = () => {
+    const currentPath = window.location.pathname;
+    navigate("/signup", { state: { from: currentPath } });
   };
 
   return (
@@ -176,7 +172,7 @@ const CreateInputWebflowElements = ({
       )}
 
       <Button
-        onClick={() => (user ? createWebflowElement() : handleGoogleLogin())}
+        onClick={() => (user ? createWebflowElement() : handleNavigate())}
         variant="actionPrimaryHover"
         extraClassNames={`shadow-action-colored ${
           selectedWebflowEl !== "FormForm"

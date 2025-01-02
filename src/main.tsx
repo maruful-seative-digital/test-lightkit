@@ -5,6 +5,7 @@ import AuthProvider from "./providers/AuthProvider.tsx";
 import { BrowserRouter, useRoutes } from "react-router-dom";
 import { routes } from "./routes/Routes.tsx";
 import { SharedStateProvider } from "./providers/SharedStateProvider.tsx";
+import { InputFormProvider } from "./providers/InputFormProvider.tsx";
 
 const AppRoutes = () => {
   const element = useRoutes(routes);
@@ -15,9 +16,11 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <AuthProvider>
       <SharedStateProvider>
-        <BrowserRouter>
-          <AppRoutes />
-        </BrowserRouter>
+        <InputFormProvider>
+          <BrowserRouter>
+            <AppRoutes />
+          </BrowserRouter>
+        </InputFormProvider>
       </SharedStateProvider>
     </AuthProvider>
   </StrictMode>

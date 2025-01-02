@@ -3,14 +3,14 @@ export default function Subscription() {
     <main className="p-4">
       {/* heading wrapper */}
       <div className="flex flex-col items-center w-full mt-1 mb-6">
-        <h2 className="text-xl">Budget friendly pricing, based upon you</h2>
-        <p className="mt-1 text-small text-text-2">
+        <h2 className="text-xl">Coming Soon!</h2>
+        {/* <p className="mt-1 text-small text-text-2">
           Let’s get started today 💖
-        </p>
+        </p> */}
       </div>
 
       {/* pricing cards wrapper */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-3 gap-4 blur">
         {/* free card */}
         <div className="flex flex-col border rounded-md border-blue-border">
           {/* card all contents */}

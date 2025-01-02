@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../providers/AuthProvider";
 import { sendEmailVerification } from "firebase/auth";
 import { addDoc, collection, getDocs } from "firebase/firestore";
@@ -46,6 +46,9 @@ export default function Signup() {
   const [userData, setUserData] = useState<User[]>([]);
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const redirectPath = location.state?.from || "/signup/email-verification";
 
   const { loginWithGoogle, createUser } = useAuth();
 
@@ -70,7 +73,7 @@ export default function Signup() {
       .then((result) => {
         sendEmailVerification(result.user).then(() => {
           if (result.user) {
-            navigate("/signup/email-verification");
+            navigate(redirectPath);
           }
 
           webflow.notify({
@@ -104,7 +107,7 @@ export default function Signup() {
 
         sendEmailVerification(user).then(() => {
           if (result.user) {
-            navigate("/signup/email-verification");
+            navigate(redirectPath);
           }
 
           if (!user.emailVerified) {
