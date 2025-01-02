@@ -257,13 +257,17 @@ const PreviewPanel = ({
               </div>
             ))}
 
-            {generalValues ? (
-              <button
-                type="button"
-                className="flex items-center gap-1 px-3 py-2 mt-4 rounded w-fit bg-background-inverse text-text-inverse text-small"
-              >
-                {generalValues.buttonText}
-              </button>
+            {generalValues || fromValues.length !== 0 ? (
+              <>
+                {generalValues && (
+                  <button
+                    type="button"
+                    className="flex items-center gap-1 px-3 py-2 mt-4 rounded w-fit bg-background-inverse text-text-inverse text-small"
+                  >
+                    {generalValues.buttonText}
+                  </button>
+                )}
+              </>
             ) : (
               <div className="flex gap-1 flex-col items-center justify-center p-8 rounded bg-background-2 text-small max-w-[280px] mx-auto">
                 <svg

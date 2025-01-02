@@ -57,7 +57,7 @@ const featureList: FeatureListTypes = [
 
 const FeatureList = ({ setSelectedFeature }: PropTypes): React.ReactElement => {
   return (
-    <section className="grid w-full grid-cols-4 gap-4 px-4 pt-4">
+    <section className="grid w-full grid-cols-4 gap-4 p-4">
       {featureList.map((feature) => (
         <button
           className={`rounded-2xl min-h-[200px] p-4 relative flex items-center text-text-1 justify-center ${

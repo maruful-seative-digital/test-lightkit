@@ -1,6 +1,9 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import Button from "../shared/Button";
-import { AuthContext } from "../../providers/AuthProvider";
+import { useAuth } from "../../providers/AuthProvider";
+import { Link, useNavigate } from "react-router-dom";
+import placeholderUserImage from "../../assets/placeholders/placeholder-user.png";
+import useEmailVerification from "../../hooks/useEmailVerification";
 
 type PropTypes = {
   children: React.ReactNode;
@@ -8,24 +11,18 @@ type PropTypes = {
 
 const AppHeader = ({ children }: PropTypes) => {
   const [showMenu, setShowMenu] = useState(false);
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
+  const emailVerified = useEmailVerification();
 
-  const authContext = useContext(AuthContext);
-
-  if (!authContext) {
-    throw new Error("AuthContext must be used within an AuthProvider");
-  }
-
-  const { loginWithGoogle, user, logout } = authContext;
-
-  const handleGoogleLogin = () => {
-    loginWithGoogle()
-      .then()
-      .catch((error) => console.log(error));
-  };
+  console.log("email verified: ", emailVerified);
 
   const handleLogout = () => {
     logout()
-      .then()
+      .then(() => {
+        setShowMenu(false);
+        navigate("/");
+      })
       .catch((error) => console.log(error));
   };
 
@@ -45,7 +42,7 @@ const AppHeader = ({ children }: PropTypes) => {
           <div className="relative flex items-center">
             <button onClick={() => setShowMenu(!showMenu)}>
               <img
-                src={user?.photoURL as string}
+                src={user?.photoURL ? user.photoURL : placeholderUserImage}
                 alt="User image"
                 className="w-6 h-6 rounded-full"
                 loading="lazy"
@@ -54,11 +51,29 @@ const AppHeader = ({ children }: PropTypes) => {
 
             {/* menu list */}
             {showMenu && (
-              <div className="absolute right-0 z-10 text-white rounded h-fit w-fit top-8 text-small bg-background-3">
+              <div className="absolute z-10 overflow-hidden text-white border rounded -right-1 h-fit w-fit top-8 text-small bg-background-2 border-border-1">
                 <ul>
+                  <li>
+                    <Link
+                      onClick={() => setShowMenu(false)}
+                      to="/profile"
+                      className="block px-4 py-2 cursor-pointer hover:bg-background-3"
+                    >
+                      Profile
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      onClick={() => setShowMenu(false)}
+                      to="/subscription"
+                      className="block px-4 py-2 cursor-pointer hover:bg-background-3"
+                    >
+                      Subscription
+                    </Link>
+                  </li>
                   <li
                     onClick={handleLogout}
-                    className="px-4 py-2 cursor-pointer"
+                    className="px-4 py-2 cursor-pointer hover:bg-background-3"
                   >
                     Logout
                   </li>
@@ -67,8 +82,8 @@ const AppHeader = ({ children }: PropTypes) => {
             )}
           </div>
         ) : (
-          <button
-            onClick={handleGoogleLogin}
+          <Link
+            to="/signup"
             className="p-1 rounded bg-background-3 text-text-1"
           >
             <svg
@@ -89,7 +104,7 @@ const AppHeader = ({ children }: PropTypes) => {
                 fill="#F5F5F5"
               />
             </svg>
-          </button>
+          </Link>
         )}
       </div>
     </header>
