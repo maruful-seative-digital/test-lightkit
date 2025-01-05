@@ -4,7 +4,10 @@ import { FormValuesType, GeneralSettingFromType } from "../InputFields";
 import Button from "../../../components/shared/Button";
 import { useAuth } from "../../../providers/AuthProvider";
 import useEmailVerification from "../../../hooks/useEmailVerification";
-import { useNavigate } from "react-router-dom";
+import { sendEmailVerification } from "firebase/auth";
+import { useLocation, useNavigate } from "react-router-dom";
+import { addDataToFirestore } from "../../../utils/addDataToFirestore";
+import { GetDataFromFirestore } from "../../../utils/getDataFromFirestore";
 
 type PropsType = {
   fromValues: FormValuesType[];
@@ -19,9 +22,15 @@ const CreateInputWebflowElements = ({
   selectedWebflowEl,
   generalValues,
 }: PropsType): React.ReactElement => {
-  const { user } = useAuth();
+  const { user, loginWithGoogle } = useAuth();
   const emailVerified = useEmailVerification();
+
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const redirectPath = location.state?.from || "/signup/email-verification";
+
+  const { userData } = GetDataFromFirestore();
 
   async function createWebflowElement() {
     const selectedElement = await webflow.getSelectedElement();
@@ -112,9 +121,60 @@ const CreateInputWebflowElements = ({
     }
   }
 
-  const handleNavigate = () => {
-    const currentPath = window.location.pathname;
-    navigate("/signup", { state: { from: currentPath } });
+  const handleGoogleLogin = async () => {
+    loginWithGoogle()
+      .then(async (result) => {
+        const user = result.user;
+        const pricingPlan = "free";
+
+        sendEmailVerification(user).then(() => {
+          if (result.user) {
+            navigate(redirectPath);
+          }
+
+          if (!user.emailVerified) {
+            webflow.notify({
+              type: "Info",
+              message: "Email verification mail sent to your email address",
+            });
+          } else {
+            webflow.notify({
+              type: "Success",
+              message: "User logged in successfully!",
+            });
+          }
+        });
+
+        const email = user.email;
+        const displayName = user.displayName;
+
+        if (!email || !displayName) {
+          console.error("Missing user information.");
+          return;
+        }
+
+        const userAlreadyRegistered = userData.find(
+          (user) => user.email === email
+        );
+
+        if (!userAlreadyRegistered) {
+          const added = await addDataToFirestore(
+            displayName,
+            email,
+            pricingPlan
+          );
+
+          if (added) {
+            webflow.notify({
+              type: "Success",
+              message: "User registered successfully!",
+            });
+          }
+        }
+      })
+      .catch((error) => {
+        console.error("Error during Google login:", error);
+      });
   };
 
   return (
@@ -172,7 +232,7 @@ const CreateInputWebflowElements = ({
       )}
 
       <Button
-        onClick={() => (user ? createWebflowElement() : handleNavigate())}
+        onClick={() => (user ? createWebflowElement() : handleGoogleLogin())}
         variant="actionPrimaryHover"
         extraClassNames={`shadow-action-colored ${
           selectedWebflowEl !== "FormForm"

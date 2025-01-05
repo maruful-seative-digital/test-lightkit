@@ -1,39 +1,12 @@
-import { collection, getDocs } from "firebase/firestore";
 import { Link, useNavigate } from "react-router-dom";
-import { db } from "../firebase/firebaseConfig";
-import { useEffect, useState } from "react";
 import { useAuth } from "../providers/AuthProvider";
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-}
-
-async function getDataFromFirestore(): Promise<User[]> {
-  const querySnapshot = await getDocs(collection(db, "users"));
-
-  const data: User[] = [];
-  querySnapshot.forEach((doc) => {
-    const userData = doc.data() as Omit<User, "id">;
-    data.push({ id: doc.id, ...userData });
-  });
-  return data;
-}
+import { GetDataFromFirestore } from "../utils/getDataFromFirestore";
 
 export default function ForgotPassword() {
-  const [userData, setUserData] = useState<User[]>([]);
-
   const { resetPassword } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    async function fetchData() {
-      const data = await getDataFromFirestore();
-      setUserData(data);
-    }
-    fetchData();
-  }, []);
+  const { userData } = GetDataFromFirestore();
 
   const handleForgetPassword = async (
     event: React.FormEvent<HTMLFormElement>

@@ -1,58 +1,16 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../providers/AuthProvider";
-import { addDoc, collection, getDocs } from "firebase/firestore";
-import { db } from "../firebase/firebaseConfig";
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-}
-
-async function getDataFromFirestore(): Promise<User[]> {
-  const querySnapshot = await getDocs(collection(db, "users"));
-
-  const data: User[] = [];
-  querySnapshot.forEach((doc) => {
-    const userData = doc.data() as Omit<User, "id">;
-    data.push({ id: doc.id, ...userData });
-  });
-  return data;
-}
-
-async function addDataToFirestore(
-  name: string,
-  email: string
-): Promise<boolean> {
-  try {
-    const docRef = await addDoc(collection(db, "users"), {
-      name: name,
-      email: email,
-    });
-
-    console.log(docRef.id);
-    return true;
-  } catch (err) {
-    console.error(err);
-    return false;
-  }
-}
+import { GetDataFromFirestore } from "../utils/getDataFromFirestore";
+import { addDataToFirestore } from "../utils/addDataToFirestore";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
-  const [userData, setUserData] = useState<User[]>([]);
 
   const navigate = useNavigate();
   const { loginWithGoogle, loginWithPassword } = useAuth();
 
-  useEffect(() => {
-    async function fetchData() {
-      const data = await getDataFromFirestore();
-      setUserData(data);
-    }
-    fetchData();
-  }, []);
+  const { userData } = GetDataFromFirestore();
 
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -85,6 +43,7 @@ export default function Login() {
 
         const email = user.email;
         const displayName = user.displayName;
+        const pricingPlan = "free";
 
         if (!email || !displayName) {
           console.error("Missing user information.");
@@ -96,7 +55,11 @@ export default function Login() {
         );
 
         if (!userAlreadyRegistered) {
-          const added = await addDataToFirestore(displayName, email);
+          const added = await addDataToFirestore(
+            displayName,
+            email,
+            pricingPlan
+          );
 
           if (added) {
             webflow.notify({

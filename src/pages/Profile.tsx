@@ -10,22 +10,13 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
+import { GetDataFromFirestore } from "../utils/getDataFromFirestore";
 
 interface User {
   id: string;
   name: string;
   email: string;
-}
-
-async function getDataFromFirestore(): Promise<User[]> {
-  const querySnapshot = await getDocs(collection(db, "users"));
-
-  const data: User[] = [];
-  querySnapshot.forEach((doc) => {
-    const userData = doc.data() as Omit<User, "id">;
-    data.push({ id: doc.id, ...userData });
-  });
-  return data;
+  pricingPlan: string;
 }
 
 const updateNameInFirestore = async (
@@ -56,17 +47,10 @@ export default function Profile() {
   const [isFirstTab, setIsFirstTab] = useState(true);
   const [isSecondTab, setIsSecondTab] = useState(false);
   const [showForm, setShowForm] = useState(false);
-  const [userData, setUserData] = useState<User[]>([]);
+
+  const { userData, setUserData } = GetDataFromFirestore();
 
   const nameRef = useRef<HTMLParagraphElement>(null);
-
-  useEffect(() => {
-    async function fetchData() {
-      const data = await getDataFromFirestore();
-      setUserData(data);
-    }
-    fetchData();
-  }, []);
 
   const { user, updateUserProfile, resetPassword } = useAuth();
 

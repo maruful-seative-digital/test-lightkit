@@ -3,7 +3,6 @@ import Button from "../shared/Button";
 import { useAuth } from "../../providers/AuthProvider";
 import { Link, useNavigate } from "react-router-dom";
 import placeholderUserImage from "../../assets/placeholders/placeholder-user.png";
-import useEmailVerification from "../../hooks/useEmailVerification";
 
 type PropTypes = {
   children: React.ReactNode;
@@ -13,9 +12,6 @@ const AppHeader = ({ children }: PropTypes) => {
   const [showMenu, setShowMenu] = useState(false);
   const navigate = useNavigate();
   const { user, logout } = useAuth();
-  const emailVerified = useEmailVerification();
-
-  console.log("email verified: ", emailVerified);
 
   const handleLogout = () => {
     logout()
