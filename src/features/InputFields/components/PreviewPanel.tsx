@@ -5,6 +5,8 @@ import InputField from "../../../components/shared/Input.";
 import { useState } from "react";
 import formImage1 from "../../../assets/input-field/form-version-one-img.png";
 import formImage2 from "../../../assets/input-field/form-version-two-img.png";
+import { useAuth } from "../../../providers/AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 type PropsType = {
   fromValues: FormValuesType[];
@@ -27,6 +29,9 @@ const PreviewPanel = ({
     "custom-input-field"
   );
 
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
   const blueFill = "#8ac2ff";
   const grayFill = "#6D6D6D";
 
@@ -45,7 +50,18 @@ const PreviewPanel = ({
     },
   ];
 
+  const currentPath = window.location.pathname;
+
   const handleCopy = async (id: number) => {
+    if (!user) {
+      webflow.notify({
+        type: "Info",
+        message: "Please SignUp or Login to Copy",
+      });
+      navigate("/signup", { state: { from: currentPath } });
+      return;
+    }
+
     const res = await fetch("/inputTemplates.json");
     const data = await res.json();
 
