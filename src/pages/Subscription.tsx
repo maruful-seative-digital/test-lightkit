@@ -52,7 +52,6 @@ export default function Subscription() {
                     viewBox="0 0 100 100"
                     enableBackground="new 0 0 512 512"
                     xmlSpace="preserve"
-                    className=""
                   >
                     <g>
                       <linearGradient
@@ -73,7 +72,6 @@ export default function Subscription() {
                         clip-rule="evenodd"
                         opacity="1"
                         data-original="url(#a)"
-                        className=""
                       ></path>
                     </g>
                   </svg>
@@ -91,7 +89,6 @@ export default function Subscription() {
                     viewBox="0 0 100 100"
                     enableBackground="new 0 0 512 512"
                     xmlSpace="preserve"
-                    className=""
                   >
                     <g>
                       <linearGradient
@@ -112,7 +109,6 @@ export default function Subscription() {
                         clip-rule="evenodd"
                         opacity="1"
                         data-original="url(#a)"
-                        className=""
                       ></path>
                     </g>
                   </svg>
@@ -130,7 +126,6 @@ export default function Subscription() {
                     viewBox="0 0 100 100"
                     enableBackground="new 0 0 512 512"
                     xmlSpace="preserve"
-                    className=""
                   >
                     <g>
                       <linearGradient
@@ -151,7 +146,6 @@ export default function Subscription() {
                         clip-rule="evenodd"
                         opacity="1"
                         data-original="url(#a)"
-                        className=""
                       ></path>
                     </g>
                   </svg>
@@ -273,7 +267,6 @@ export default function Subscription() {
                     viewBox="0 0 100 100"
                     enableBackground="new 0 0 512 512"
                     xmlSpace="preserve"
-                    className=""
                   >
                     <g>
                       <linearGradient
@@ -294,7 +287,6 @@ export default function Subscription() {
                         clip-rule="evenodd"
                         opacity="1"
                         data-original="url(#a)"
-                        className=""
                       ></path>
                     </g>
                   </svg>
@@ -312,7 +304,6 @@ export default function Subscription() {
                     viewBox="0 0 100 100"
                     enableBackground="new 0 0 512 512"
                     xmlSpace="preserve"
-                    className=""
                   >
                     <g>
                       <linearGradient
@@ -333,7 +324,6 @@ export default function Subscription() {
                         clip-rule="evenodd"
                         opacity="1"
                         data-original="url(#a)"
-                        className=""
                       ></path>
                     </g>
                   </svg>
@@ -351,7 +341,6 @@ export default function Subscription() {
                     viewBox="0 0 100 100"
                     enableBackground="new 0 0 512 512"
                     xmlSpace="preserve"
-                    className=""
                   >
                     <g>
                       <linearGradient
@@ -372,7 +361,6 @@ export default function Subscription() {
                         clip-rule="evenodd"
                         opacity="1"
                         data-original="url(#a)"
-                        className=""
                       ></path>
                     </g>
                   </svg>
@@ -390,7 +378,6 @@ export default function Subscription() {
                     viewBox="0 0 100 100"
                     enableBackground="new 0 0 512 512"
                     xmlSpace="preserve"
-                    className=""
                   >
                     <g>
                       <linearGradient
@@ -411,7 +398,6 @@ export default function Subscription() {
                         clip-rule="evenodd"
                         opacity="1"
                         data-original="url(#a)"
-                        className=""
                       ></path>
                     </g>
                   </svg>
@@ -500,7 +486,6 @@ export default function Subscription() {
                     viewBox="0 0 100 100"
                     enableBackground="new 0 0 512 512"
                     xmlSpace="preserve"
-                    className=""
                   >
                     <g>
                       <linearGradient
@@ -521,7 +506,6 @@ export default function Subscription() {
                         clip-rule="evenodd"
                         opacity="1"
                         data-original="url(#a)"
-                        className=""
                       ></path>
                     </g>
                   </svg>
@@ -539,7 +523,6 @@ export default function Subscription() {
                     viewBox="0 0 100 100"
                     enableBackground="new 0 0 512 512"
                     xmlSpace="preserve"
-                    className=""
                   >
                     <g>
                       <linearGradient
@@ -560,7 +543,6 @@ export default function Subscription() {
                         clip-rule="evenodd"
                         opacity="1"
                         data-original="url(#a)"
-                        className=""
                       ></path>
                     </g>
                   </svg>
@@ -578,7 +560,6 @@ export default function Subscription() {
                     viewBox="0 0 100 100"
                     enableBackground="new 0 0 512 512"
                     xmlSpace="preserve"
-                    className=""
                   >
                     <g>
                       <linearGradient
@@ -599,7 +580,6 @@ export default function Subscription() {
                         clip-rule="evenodd"
                         opacity="1"
                         data-original="url(#a)"
-                        className=""
                       ></path>
                     </g>
                   </svg>
@@ -617,7 +597,6 @@ export default function Subscription() {
                     viewBox="0 0 100 100"
                     enableBackground="new 0 0 512 512"
                     xmlSpace="preserve"
-                    className=""
                   >
                     <g>
                       <linearGradient
@@ -638,7 +617,6 @@ export default function Subscription() {
                         clip-rule="evenodd"
                         opacity="1"
                         data-original="url(#a)"
-                        className=""
                       ></path>
                     </g>
                   </svg>
@@ -656,7 +634,6 @@ export default function Subscription() {
                     viewBox="0 0 100 100"
                     enableBackground="new 0 0 512 512"
                     xmlSpace="preserve"
-                    className=""
                   >
                     <g>
                       <linearGradient
@@ -677,7 +654,6 @@ export default function Subscription() {
                         clip-rule="evenodd"
                         opacity="1"
                         data-original="url(#a)"
-                        className=""
                       ></path>
                     </g>
                   </svg>

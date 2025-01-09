@@ -8,6 +8,26 @@ import { addDataToFirestore } from "../utils/addDataToFirestore";
 export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [terms, setTerms] = useState(false);
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  // validate the password is at least 8 characters long, one special character included and included one number
+  const validatePassword = (value: string) => {
+    if (value.length < 8) {
+      setError("Password must be at least 8 characters long.");
+    } else if (!/(?=.*[@$!%*?&])/.test(value)) {
+      setError("Password must include at least one special character.");
+    } else if (!/(?=.*\d)/.test(value)) {
+      setError("Password must include at least one number.");
+    } else {
+      setError("");
+    }
+  };
+  // checking the password is changing real time
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setPassword(value);
+    validatePassword(value);
+  };
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -27,6 +47,10 @@ export default function Signup() {
     const password = (form.elements.namedItem("password") as HTMLInputElement)
       .value;
     const pricingPlan = "free";
+
+    if (error) {
+      return;
+    }
 
     createUser(email, password)
       .then((result) => {
@@ -204,6 +228,8 @@ export default function Signup() {
               <input
                 type={!showPassword ? "password" : "text"}
                 id="password"
+                value={password}
+                onChange={handleChange}
                 className="text-black py-2 pr-[18px] pl-[46px] border-none text-small rounded-full block w-full leading-[0px]"
                 placeholder="Enter your password"
                 required
@@ -304,6 +330,9 @@ export default function Signup() {
                 )}
               </div>
             </div>
+            {error && password !== "" && (
+              <p className="mt-1 text-small text-red-text">{error}</p>
+            )}
           </div>
 
           <div className="flex flex-row-reverse items-center justify-end gap-2 mb-4">
@@ -311,7 +340,12 @@ export default function Signup() {
               htmlFor="terms"
               className="font-medium text-large text-text-2"
             >
-              <Link to="">Agree to Terms and Conditions</Link>
+              <Link
+                to="https://lightkit.webflow.io/utility/terms"
+                target="_blank"
+              >
+                Agree to Terms and Conditions
+              </Link>
             </label>
             <input
               onClick={() => setTerms(!terms)}

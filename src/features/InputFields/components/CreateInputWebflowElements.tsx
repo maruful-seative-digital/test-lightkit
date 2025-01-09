@@ -178,7 +178,7 @@ const CreateInputWebflowElements = ({
   };
 
   return (
-    <div className="fixed bottom-0 right-0 w-[66%] px-4 py-3 border-t border-border-1 flex items-center justify-between">
+    <div className="fixed bottom-0 right-0 w-[66%] px-4 py-3 border-t border-border-1 flex items-center justify-between bg-background-1 border-l">
       {selectedWebflowEl !== "FormForm" ? (
         <div className="flex items-center gap-1 text-text-1 text-small">
           <svg
@@ -203,29 +203,9 @@ const CreateInputWebflowElements = ({
 
           <span>Please select a</span>
 
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              fill-rule="evenodd"
-              clip-rule="evenodd"
-              d="M5.25 6.375C4.83578 6.375 4.5 6.71078 4.5 7.125V8.625C4.5 9.03923 4.83578 9.375 5.25 9.375H18.75C19.1642 9.375 19.5 9.03923 19.5 8.625V7.125C19.5 6.71078 19.1642 6.375 18.75 6.375H5.25ZM5.25 10.875C4.83578 10.875 4.5 11.2108 4.5 11.625V13.125C4.5 13.5392 4.83578 13.875 5.25 13.875H18.75C19.1642 13.875 19.5 13.5392 19.5 13.125V11.625C19.5 11.2108 19.1642 10.875 18.75 10.875H5.25Z"
-              fill="black"
-              fill-opacity="0.15"
-            />
-            <path
-              fill-rule="evenodd"
-              clip-rule="evenodd"
-              d="M18.75 6.75H5.25C5.04289 6.75 4.875 6.91789 4.875 7.125V8.625C4.875 8.83211 5.04289 9 5.25 9H18.75C18.9571 9 19.125 8.83211 19.125 8.625V7.125C19.125 6.91789 18.9571 6.75 18.75 6.75ZM5.25 6.375C4.83578 6.375 4.5 6.71078 4.5 7.125V8.625C4.5 9.03923 4.83578 9.375 5.25 9.375H18.75C19.1642 9.375 19.5 9.03923 19.5 8.625V7.125C19.5 6.71078 19.1642 6.375 18.75 6.375H5.25ZM18.75 11.25H5.25C5.04289 11.25 4.875 11.4179 4.875 11.625V13.125C4.875 13.3321 5.04289 13.5 5.25 13.5H18.75C18.9571 13.5 19.125 13.3321 19.125 13.125V11.625C19.125 11.4179 18.9571 11.25 18.75 11.25ZM5.25 10.875C4.83578 10.875 4.5 11.2108 4.5 11.625V13.125C4.5 13.5392 4.83578 13.875 5.25 13.875H18.75C19.1642 13.875 19.5 13.5392 19.5 13.125V11.625C19.5 11.2108 19.1642 10.875 18.75 10.875H5.25ZM5.25 15.375C4.83578 15.375 4.5 15.7108 4.5 16.125V16.875C4.5 17.2892 4.83578 17.625 5.25 17.625H11.25C11.6642 17.625 12 17.2892 12 16.875V16.125C12 15.7108 11.6642 15.375 11.25 15.375H5.25Z"
-              fill="#EBEBEB"
-            />
-          </svg>
+          <div className="w-3 h-3 border border-white rounded-[1px]"></div>
 
-          <span>Form Block to continue</span>
+          <span>Form to continue</span>
         </div>
       ) : (
         <div></div>

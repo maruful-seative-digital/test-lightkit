@@ -4,10 +4,16 @@ import dropdownImg from "../../assets/home/icons/dropdown.svg";
 import cardImg from "../../assets/home/icons/card.svg";
 import breadcrumbImg from "../../assets/home/icons/breadcrumb.svg";
 import tabImg from "../../assets/home/icons/tab.svg";
+import { useAuth } from "../../providers/AuthProvider";
+import { useLocation, useNavigate } from "react-router-dom";
 
 type PropTypes = {
   setSelectedFeature: React.Dispatch<React.SetStateAction<string | null>>;
 };
+
+interface Feature {
+  value: string;
+}
 
 type FeatureListTypes = {
   name: string;
@@ -56,6 +62,22 @@ const featureList: FeatureListTypes = [
 ];
 
 const FeatureList = ({ setSelectedFeature }: PropTypes): React.ReactElement => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const handleFeatureClick = (feature: Feature) => {
+    if (!user) {
+      navigate("/login", { state: { from: location.pathname } });
+      webflow.notify({
+        type: "Info",
+        message: "Please login first to select a feature",
+      });
+      return;
+    } else {
+      setSelectedFeature(feature.value);
+    }
+  };
+
   return (
     <section className="grid w-full grid-cols-4 gap-4 p-4">
       {featureList.map((feature) => (
@@ -66,7 +88,7 @@ const FeatureList = ({ setSelectedFeature }: PropTypes): React.ReactElement => {
               : "bg-transparent border border-border-1 cursor-not-allowed"
           }`}
           key={feature.value}
-          onClick={() => setSelectedFeature(feature.value)}
+          onClick={() => handleFeatureClick(feature)}
           disabled={!feature.isAvailable}
         >
           {!feature.isAvailable && (

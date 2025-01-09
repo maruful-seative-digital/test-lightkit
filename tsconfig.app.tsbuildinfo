@@ -1,1 +1,37 @@
-{"root":["./src/app.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/components/global/activefeature.tsx","./src/components/global/appheader.tsx","./src/components/global/featurelist.tsx","./src/components/shared/button.tsx","./src/components/shared/input..tsx","./src/components/shared/selectfield.tsx","./src/components/shared/toggle.tsx","./src/features/inputfields/inputfields.tsx","./src/features/inputfields/components/controlpanel.tsx","./src/features/inputfields/components/createinputwebflowelements.tsx","./src/features/inputfields/components/previewpanel.tsx","./src/utils/utilkit.ts"],"version":"5.6.3"}
+{
+  "root": [
+    "./src/app.tsx",
+    "./src/main.tsx",
+    "./src/vite-env.d.ts",
+    "./src/components/global/activefeature.tsx",
+    "./src/components/global/appheader.tsx",
+    "./src/components/global/featurelist.tsx",
+    "./src/components/global/tooltip.tsx",
+    "./src/components/shared/button.tsx",
+    "./src/components/shared/input..tsx",
+    "./src/components/shared/selectfield.tsx",
+    "./src/components/shared/toggle.tsx",
+    "./src/features/inputfields/inputfields.tsx",
+    "./src/features/inputfields/components/controlpanel.tsx",
+    "./src/features/inputfields/components/createinputwebflowelements.tsx",
+    "./src/features/inputfields/components/previewpanel.tsx",
+    "./src/firebase/firebaseconfig.tsx",
+    "./src/hooks/useemailverification.ts",
+    "./src/layouts/mainlayout.tsx",
+    "./src/pages/emailverification.tsx",
+    "./src/pages/forgotpassword.tsx",
+    "./src/pages/login.tsx",
+    "./src/pages/profile.tsx",
+    "./src/pages/signup.tsx",
+    "./src/pages/subscription.tsx",
+    "./src/providers/authprovider.tsx",
+    "./src/providers/inputformprovider.tsx",
+    "./src/providers/sharedstateprovider.tsx",
+    "./src/routes/protectedroute.tsx",
+    "./src/routes/routes.tsx",
+    "./src/utils/adddatatofirestore.ts",
+    "./src/utils/getdatafromfirestore.ts",
+    "./src/utils/utilkit.ts"
+  ],
+  "version": "5.6.3"
+}

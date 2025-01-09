@@ -50,7 +50,7 @@ const MainLayout: React.FC = () => {
       </AppHeader>
 
       {/* Content */}
-      <div className="">
+      <div>
         <Outlet />
       </div>
     </main>

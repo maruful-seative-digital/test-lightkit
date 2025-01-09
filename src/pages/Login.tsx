@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../providers/AuthProvider";
 import { GetDataFromFirestore } from "../utils/getDataFromFirestore";
 import { addDataToFirestore } from "../utils/addDataToFirestore";
@@ -8,6 +8,9 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
+  const location = useLocation();
+  const redirectPath = location.state?.from || "/";
+
   const { loginWithGoogle, loginWithPassword } = useAuth();
 
   const { userData } = GetDataFromFirestore();
@@ -23,10 +26,16 @@ export default function Login() {
     loginWithPassword(email, password)
       .then((result) => {
         if (result.user) {
-          navigate("/");
+          navigate(redirectPath);
+          webflow.notify({
+            type: "Success",
+            message: "Logged in Successfully!",
+          });
         }
 
         form.reset();
+
+        navigate(redirectPath);
       })
       .catch((error) => {
         webflow.notify({
